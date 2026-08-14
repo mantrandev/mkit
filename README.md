@@ -130,6 +130,11 @@ cách hỏng phổ biến nhất — lệnh này biến "tôi không hiểu" th�
 | `docs/active/` | Đang làm gì, tới đâu, còn gì |
 | `docs/done/` | Đã làm gì, chứng minh ra sao |
 
+Mọi câu trả lời trong lúc planning được ghi vào `docs/active/` trước. Chỉ lựa
+chọn lâu dài về product, architecture, dữ liệu, bảo mật, tương thích hoặc cách
+làm mặc định mà các việc sau phải tuân theo mới có thêm một file trong
+`docs/decisions/`.
+
 Chỉ `spec.md` là thứ bạn cần đọc. Mỗi dòng tự khai trạng thái:
 
 ```markdown
@@ -150,6 +155,10 @@ tốn câu hỏi nào.
 
 Nguyên tắc phân chia: agent tự quyết khi **sai thì phát hiện được và sửa rẻ**.
 Phải hỏi khi **sai thì bạn không phát hiện được**.
+
+Việc phải hỏi không đồng nghĩa với việc phải tạo luật chung. Cổng chốt quyết
+định **có cần hỏi hay không**; thời hạn hiệu lực của câu trả lời quyết định **ghi
+ở task hiện tại hay nâng thành luật cho các task sau**.
 
 ## Những thứ bạn không nhìn thấy
 

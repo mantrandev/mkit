@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Extract a decision from a user who cannot read code. One question at a time, every option stating what is gained and lost, then write the answer down as a rule. Use when the decision gate stops because a policy has never been chosen.
+description: Extract a choice from a user who cannot read code. Ask one question at a time, state what each option gains and loses, record the answer in the active task, and promote only lasting policy. Use when the decision gate stops because a choice has not been made.
 ---
 
 Fork of `grilling` (Matt Pocock, MIT). Keeps the design tree and the rule that
@@ -26,6 +26,11 @@ run it, measure it. Never ask the user something you could look up.
 
 Read `docs/decisions/` first. A question that already has a decision is not
 asked again — that is why those files exist.
+
+Locate the current file in `docs/active/`. It must exist before the first
+question because every answer starts as a task-local choice. When the calling
+workflow has not created it yet, create it from `docs/templates/active.md`
+before asking.
 
 ## Question format
 
@@ -78,28 +83,40 @@ Không hiểu chỗ nào thì gõ `/mkit:ha`.
 
 ## After the user decides
 
-Classify with one question. Answer it yourself; do not ask the user:
+First append the answer and its reason to `Quyết định trong việc này` in the
+current `docs/active/<task>.md`.
 
-> If a different task touches this same area next week, is this answer still
-> correct?
+Then decide whether to promote it into `docs/decisions/`. Promotion requires
+both conditions:
 
-**Yes** → create a new file in `docs/decisions/` from `docs/templates/decision.md`,
-numbered one above the highest existing. Fill both sections: `Quyết định` in
-plain Vietnamese, `Ràng buộc kỹ thuật` precise enough to execute. If it replaces
-an older decision, set that file's status to `Superseded bởi NNNN` — do not
-delete it, do not edit its content, do not move it.
+1. Future tasks must inherit the choice.
+2. It materially changes lasting product behavior, architecture, data
+   ownership, security or recovery policy, public compatibility, validation
+   requirements, or the source-of-truth/default workflow.
 
-**No** → append to `Quyết định trong việc này` in `docs/active/<task>.md`.
+Touching one of the six decision-gate items does not qualify by itself. A
+task-local implementation or acceptance choice stays only in the active plan.
+
+Answer these checks yourself; do not ask the user to classify their answer.
+
+**Promote** → create a new file in `docs/decisions/` from
+`docs/templates/decision.md`, numbered one above the highest existing. Fill both
+sections: `Quyết định` in plain Vietnamese, `Ràng buộc kỹ thuật` precise enough
+to execute. Keep the active-plan entry and link it to the promoted decision. If
+it replaces an older decision, set that file's status to `Superseded bởi NNNN`
+— do not delete it, do not edit its content, do not move it.
+
+**Keep local** → make no file in `docs/decisions/`.
 
 Then report exactly one line:
 
-> Đã ghi thành luật chung — mọi việc sau sẽ theo.
+> Đã ghi vào việc đang bàn và thành luật chung — mọi việc sau sẽ theo.
 
 or
 
-> Chỉ áp cho việc này thôi.
+> Đã ghi vào việc đang bàn — không tạo luật chung.
 
-That line is the user's only chance to say "no, don't make that permanent".
+That line is the user's chance to correct the classification.
 
 ## When the unclear thing is visual
 

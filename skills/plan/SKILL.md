@@ -1,6 +1,6 @@
 ---
 name: plan
-description: Talk through a piece of work, settle what must be settled, write it down — without touching code. Use when the user wants to explore before committing.
+description: Talk through a piece of work, record task-local choices in its active plan, and promote only lasting choices — without touching code. Use when the user wants to explore before committing.
 ---
 
 Talk only. When this skill ends, **no code file has changed**.
@@ -24,23 +24,32 @@ theirs.
 For visual requests, do not ask in words. Run `mkit:grill-me`, section *When the
 unclear thing is visual*.
 
-## 2. Decision gate
+## 2. Start the active plan
+
+Create `docs/active/<task-name>.md` from `docs/templates/active.md`. Fill
+`Muốn gì`, `Còn gì`, and the acceptance script in `Cách tự kiểm`. Leave
+`Xong gì` empty.
+
+This file must exist before the first decision question. It is the default home
+for every answer given while planning.
+
+## 3. Decision gate
 
 Read `docs/decisions/` first. Check the request against the six items in the
 `MKIT` block of `AGENTS.md`.
 
 For each item touched with no existing decision, run `mkit:grill-me`, one
-question at a time.
+question at a time. Record every answer in the active plan first. `grill-me`
+decides whether a lasting choice also needs a separate decision record.
 
-## 3. Write it down
+## 4. Finish the plan
 
-Create `docs/active/<task-name>.md` from `docs/templates/active.md`. Fill
-`Muốn gì` and `Còn gì`. Leave `Xong gì` empty.
+Update the active plan with anything settled by the decision gate.
 
 Add the matching line to `spec.md` as `⬜ chưa làm`, or `⏳ đang làm` with a link
 to the file if the user says they want it built now.
 
-## 4. Stop
+## 5. Stop
 
 Report three things, briefly, in plain language:
 

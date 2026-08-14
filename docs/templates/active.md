@@ -22,9 +22,10 @@ Người dùng phải đọc dòng này và nói được "đúng rồi" hoặc 
 
 ## Quyết định trong việc này
 
-- YYYY-MM-DD: <Quyết định chỉ đúng cho việc này, kèm lý do.>
+- YYYY-MM-DD: <Câu trả lời đã chốt trong lúc bàn việc này, kèm lý do.>
 
-Quyết định áp cho mọi việc sau thì chuyển sang `docs/decisions/`.
+Mọi câu trả lời bắt đầu ở đây. Chỉ lựa chọn lâu dài mà các việc sau phải tuân
+theo mới được ghi thêm vào `docs/decisions/`.
 
 ## Ghi chú kỹ thuật
 

@@ -21,7 +21,7 @@ có bằng chứng chạy được, không phải viết xong là tính.
 - [x] `implement` — làm tới khi có thứ bấm thử được — ✅ chạy · 2026-08-14
 - [x] `fix` — chưa tái hiện được thì không sửa — ✅ chạy · 2026-08-14
 - [x] `continue` — hôm trước làm tới đâu — ✅ chạy · 2026-08-14
-- [x] `grill-me` — hỏi 1 câu/lần, mỗi lựa chọn nêu được gì mất gì — ✅ chạy · 2026-08-14
+- [ ] `grill-me` — hỏi 1 câu/lần, mỗi lựa chọn nêu được gì mất gì — ⏳ đang sửa · [phân loại câu trả lời](docs/active/phan-loai-cau-tra-loi-grill-me.md)
 - [x] `ha` — nói lại kiểu khác — ✅ chạy · 2026-08-14
 - [x] `init` — cài vào repo đích — ✅ chạy · 2026-08-14
 

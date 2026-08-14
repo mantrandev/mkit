@@ -78,7 +78,8 @@ Before editing any file, check the request against these six:
 6. **Permissions** — who may do what, who may see what
 
 If the request touches any of them and `docs/decisions/` has no matching
-decision: **stop, edit nothing**, run `mkit:grill-me`.
+decision: **stop before editing product files**, create the current
+`docs/active/<task>.md` if it does not exist, then run `mkit:grill-me`.
 
 A library's default value is not a decision. Nobody chose that number. Taking a
 default and treating it as settled forges the user's authority.
@@ -159,19 +160,26 @@ the user all over again.
 
 ### Where answers go
 
-After each answer the user gives, classify it with one question:
+Every answer starts in `Quyết định trong việc này` in the current
+`docs/active/<task>.md`. Promote it into `docs/decisions/` only when both are
+true:
 
-> If a different task touches this same area next week, is this answer still
-> correct?
+1. future tasks must inherit it
+2. it materially changes lasting product behavior, architecture, data
+   ownership, security or recovery policy, public compatibility, validation
+   requirements, or the source-of-truth/default workflow
 
-Yes → `docs/decisions/`. No → the `Quyết định trong việc này` section of
-`docs/active/<task>.md`.
+Touching one of the six decision-gate items is not enough by itself. A
+task-local implementation or acceptance choice stays only in the active file.
 
-Do not ask the user this question. They just decided one concrete thing; asking
-them to also judge its scope is a level of abstraction higher, and they will
-nod. Decide it yourself, then report one line so they can object:
+Do not ask the user to classify their answer. Decide it yourself, then report
+one line so they can object:
 
-> Đã ghi thành luật chung — mọi việc sau sẽ theo.
+> Đã ghi vào việc đang bàn — không tạo luật chung.
+
+or
+
+> Đã ghi vào việc đang bàn và thành luật chung — mọi việc sau sẽ theo.
 
 ### Completion standard
 
