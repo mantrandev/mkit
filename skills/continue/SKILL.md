@@ -1,7 +1,6 @@
 ---
 name: continue
 description: Show what is in progress and pick it back up. Use when the user opens a new session and does not remember where they left off.
-disable-model-invocation: true
 ---
 
 Answer exactly one question: **what was I doing, and how far did I get.**

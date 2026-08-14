@@ -1,7 +1,6 @@
 ---
 name: fix
 description: Fix a bug — reproduce first, fix second, verify with the same steps used to reproduce. Use when the user reports something broken.
-disable-model-invocation: true
 ---
 
 The one rule that cannot be broken:

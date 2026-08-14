@@ -1,7 +1,6 @@
 ---
 name: plan
 description: Talk through a piece of work, settle what must be settled, write it down — without touching code. Use when the user wants to explore before committing.
-disable-model-invocation: true
 ---
 
 Talk only. When this skill ends, **no code file has changed**.

@@ -1,7 +1,6 @@
 ---
 name: init
 description: Install mkit into the current repository — create the document folders and insert the instruction block into AGENTS.md and CLAUDE.md. Run once per project.
-disable-model-invocation: true
 ---
 
 Install mkit into the repository that is currently open. Safe to run repeatedly;

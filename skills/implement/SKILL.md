@@ -1,7 +1,6 @@
 ---
 name: implement
 description: Actually build a piece of work — settle what must be settled, then change code until the user has something they can test with their own hands. Use when the user wants it built now.
-disable-model-invocation: true
 ---
 
 Build until the user has something they can see for themselves.

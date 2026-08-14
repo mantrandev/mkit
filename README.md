@@ -48,18 +48,35 @@ Người dùng vẫn là người quyết định. Chỉ có ngôn ngữ đổi.
 
 ## Cài
 
-**Claude Code** — hai lệnh, không cần mở terminal:
+### Claude Code
+
+Hai lệnh, không cần mở terminal:
 
 ```
 /plugin marketplace add mantrandev/mkit
 /plugin install mkit@mkit
 ```
 
-Rồi mở dự án của bạn và gõ `/mkit:init` một lần. Lệnh này cũng cài luôn phần
-cho Codex và Pi.
+Rồi mở dự án của bạn và gõ `/mkit:init` một lần.
+
+### Codex
+
+Chạy trong terminal:
+
+```bash
+codex plugin marketplace add mantrandev/mkit --ref main
+codex plugin add mkit@mkit
+```
+
+Mở một phiên Codex mới trong dự án của bạn rồi gõ `$mkit:init` một lần. Sau khi
+lệnh này chạy xong, mở phiên mới thêm lần nữa để Codex đọc luật vừa được cài vào
+dự án.
+
+Codex cũng có trình duyệt plugin. Gõ `/plugins`, chọn marketplace `mkit`, rồi cài
+plugin `mkit`. Sau khi cài phải mở phiên mới.
 
 <details>
-<summary>Không dùng Claude Code — một lệnh trong terminal</summary>
+<summary>Không cài plugin — một lệnh trong terminal</summary>
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/mantrandev/mkit/main/install.sh | bash
@@ -68,8 +85,7 @@ curl -fsSL https://raw.githubusercontent.com/mantrandev/mkit/main/install.sh | b
 Cài vào thư mục hiện tại; thêm đường dẫn phía sau để cài chỗ khác. Chạy lại chỉ
 cập nhật khối hướng dẫn, không đụng gì bạn đã viết.
 
-Cách này cài luật và workflow cho Codex/Pi, không cài slash command — Claude Code
-lấy lệnh từ plugin.
+Cách này cài luật và workflow cho Codex/Pi mà không cài plugin.
 
 </details>
 
@@ -78,7 +94,7 @@ lấy lệnh từ plugin.
 | Agent | Đọc gì | Dùng thế nào |
 | --- | --- | --- |
 | **Claude Code** | `CLAUDE.md` → `AGENTS.md` | Gõ `/mkit:plan`, `/mkit:fix`… |
-| **Codex** | `AGENTS.md` | Nói tiếng thường: *"bàn về X"*, *"bị lỗi rồi"* |
+| **Codex** | plugin → `AGENTS.md` | Gõ `$mkit:init` một lần, sau đó nói tiếng thường |
 | **Pi** | `AGENTS.md` | Nói tiếng thường |
 
 Luật nằm **một chỗ duy nhất** trong `AGENTS.md`. `CLAUDE.md` chỉ có một dòng
@@ -99,8 +115,8 @@ bảng ở cuối khối `AGENTS.md`, trỏ vào `.mkit/workflows/`.
 | `/mkit:continue` | Hôm trước làm tới đâu rồi |
 | `/mkit:ha` | Nói lại kiểu khác khi bạn không hiểu |
 
-Trên Codex và Pi thì không gõ lệnh — nói bằng tiếng thường, agent tự tìm đúng
-workflow.
+Sau bước `$mkit:init`, trên Codex và Pi chỉ cần nói bằng tiếng thường, agent tự
+tìm đúng workflow.
 
 `/mkit:ha` là lệnh quan trọng nhất trong sáu cái. Không hiểu mà gật cho qua là
 cách hỏng phổ biến nhất — lệnh này biến "tôi không hiểu" thành một thứ gõ ra được.

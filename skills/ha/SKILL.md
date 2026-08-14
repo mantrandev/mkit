@@ -1,7 +1,6 @@
 ---
 name: ha
 description: Say the last thing again, differently. Use when the user did not understand what was just explained.
-disable-model-invocation: true
 ---
 
 The last message did not land. Re-pitch it — do not repeat it.
