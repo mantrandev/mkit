@@ -1,60 +1,70 @@
 ---
 name: implement
-description: Làm thật một việc — chốt những gì cần chốt rồi sửa code cho tới khi có thứ người dùng tự bấm thử được. Dùng khi người dùng muốn làm luôn.
+description: Actually build a piece of work — settle what must be settled, then change code until the user has something they can test with their own hands. Use when the user wants it built now.
 disable-model-invocation: true
 ---
 
-Làm cho tới khi có thứ người dùng tự nhìn thấy được.
+Build until the user has something they can see for themselves.
 
-Cổng chốt vẫn chạy đủ như `/mkit:plan`. Lệnh này khác ở **điểm dừng**, không
-khác ở mức an toàn. Người dùng gõ `implement` thay vì `plan` không có nghĩa là
-họ cho phép bỏ qua câu hỏi nào.
+The decision gate runs exactly as it does in `/mkit:plan`. This command differs
+in **where it stops**, not in how safe it is. Choosing `implement` over `plan`
+does not grant permission to skip any question.
 
-## 1. Hiểu đúng chưa
+Talk to the user in Vietnamese.
 
-Viết lại mong muốn bằng lời người dùng. Hỏi đúng chưa. Chưa đúng thì sửa, không
-đi tiếp.
+## 1. Clarify the request
 
-Nếu `docs/active/` đã có file cho việc này (do `/mkit:plan` tạo trước đó), đọc
-nó thay vì hỏi lại từ đầu.
+A loop. Each pass: restate the request in the user's own words, then try to
+write its acceptance script — "open X, do Y, you must see Z". Ask about whatever
+you could not write.
 
-## 2. Cổng chốt
+Do not guess, build, and correct. Five wrong guesses cost the user more time
+than two questions, and each one erodes their belief that you understood them.
 
-Đọc `docs/decisions/`. Đối chiếu sáu mục. Thiếu quyết định nào thì
-`mkit:grill-me` cho mục đó.
+For visual requests, run `mkit:grill-me`, section *When the unclear thing is
+visual* — build variants, do not ask in words.
 
-Không có mục nào bị chạm thì không hỏi câu nào — sang thẳng bước 3.
+If `docs/active/` already holds a file for this task (from an earlier
+`/mkit:plan`), read it instead of starting over.
 
-## 3. Làm
+## 2. Decision gate
 
-Vừa làm vừa cập nhật `Xong gì` trong `docs/active/<tên-việc>.md`. Người dùng có
-thể đóng máy bất cứ lúc nào; file đó là thứ duy nhất giúp họ quay lại.
+Read `docs/decisions/`. Check the six items. For anything touched without a
+decision, run `mkit:grill-me`.
 
-**Dừng giữa chừng** khi gặp một trong năm dấu hiệu ở khối `MKIT`. Khi dừng:
+If nothing is touched, ask nothing — go straight to step 3.
 
-1. commit một checkpoint
-2. nói đã sửa gì, app còn chạy được không
-3. nói cách quay lui
-4. rồi mới hỏi
+## 3. Build
 
-Không bao giờ tự chọn "phương án an toàn nhất" rồi đi tiếp.
+Update `Xong gì` in `docs/active/<task>.md` as you go. The user may close their
+laptop at any moment; that file is the only thing that lets them come back.
 
-## 4. Chuẩn hoàn thành
+**Stop mid-work** on any of the five signals in the `MKIT` block. When you stop:
 
-Viết kịch bản thao tác người dùng tự bấm được, kèm thứ họ phải thấy. Cụ thể tới
-mức bấm theo được mà không cần hỏi thêm.
+1. commit a checkpoint
+2. say what changed and whether the app still runs
+3. say how to go back
+4. then ask
 
-Không báo số test, không báo coverage, không liệt kê file đã sửa.
+Never pick "the safest option" and keep going.
 
-Viết không nổi kịch bản đó thì chưa xong — nói thẳng như vậy và nói còn thiếu gì.
+## 4. Completion standard
 
-## 5. Đóng việc
+Write an acceptance script the user can run with their own hands, with what they
+must see. Concrete enough to follow without asking anything further.
 
-Người dùng xác nhận thấy đúng:
+No test counts. No coverage. No list of changed files.
 
-- điền `Cách tự kiểm` vào file trong `docs/active/`
-- chuyển file sang `docs/done/`
-- đổi dòng tương ứng trong `spec.md` thành `✅ chạy` kèm ngày hôm nay
+If you cannot write that script, it is not done — say so plainly and say what is
+missing.
 
-Người dùng nói không thấy đúng: quay lại **bước 1**, không phải bước 3. Phần lớn
-trường hợp là hiểu lệch mong muốn ban đầu, không phải code sai.
+## 5. Close the task
+
+Once the user confirms they see it working:
+
+- fill `Cách tự kiểm` in the `docs/active/` file
+- move the file to `docs/done/`
+- change the matching `spec.md` line to `✅ chạy` with today's date
+
+If the user says it is not right, go back to **step 1**, not step 3. Most of the
+time the request was understood wrongly, not implemented wrongly.

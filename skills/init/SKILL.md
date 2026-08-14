@@ -1,18 +1,20 @@
 ---
 name: init
-description: Cài mkit vào repo hiện tại — tạo thư mục tài liệu, chèn khối hướng dẫn vào AGENTS.md và CLAUDE.md. Dùng một lần cho mỗi dự án.
+description: Install mkit into the current repository — create the document folders and insert the instruction block into AGENTS.md and CLAUDE.md. Run once per project.
 disable-model-invocation: true
 ---
 
-Cài mkit vào repo đang mở. Chạy được nhiều lần, lần sau chỉ cập nhật khối
-hướng dẫn, không đụng gì khác.
+Install mkit into the repository that is currently open. Safe to run repeatedly;
+later runs only refresh the instruction block.
 
-## 1. Kiểm tra
+Talk to the user in Vietnamese.
 
-Đang ở trong một repo git chứ. Không phải thì hỏi người dùng có muốn `git init`
-không trước khi làm gì thêm — không có git thì mọi checkpoint đều vô nghĩa.
+## 1. Check
 
-## 2. Tạo chỗ chứa
+Confirm this is a git repository. If not, ask whether to `git init` before doing
+anything else — without git, every checkpoint is meaningless.
+
+## 2. Create the folders
 
 ```
 docs/decisions/
@@ -20,37 +22,40 @@ docs/active/
 docs/done/
 ```
 
-Đã có thì để nguyên.
+Leave any that already exist untouched.
 
-## 3. Chèn khối hướng dẫn
+## 3. Insert the instruction block
 
-Vào `AGENTS.md`: nội dung `core/AGENTS.block.md`.
-Vào `CLAUDE.md`: nội dung `core/CLAUDE.block.md`.
+Into `AGENTS.md`: the contents of `core/AGENTS.block.md`.
+Into `CLAUDE.md`: the contents of `core/CLAUDE.block.md`.
 
-Quy tắc chèn, áp cho cả hai file:
+Insertion rules, same for both files:
 
-- file đã có `<!-- MKIT:BEGIN -->` → thay toàn bộ đoạn giữa `BEGIN` và `END`,
-  không đụng chữ nào bên ngoài
-- file có sẵn nhưng chưa có mốc → nối khối vào **cuối file**
-- file chưa có → tạo mới với tiêu đề `# Project Rules` rồi mới tới khối
+- file already contains `<!-- MKIT:BEGIN -->` → replace everything between
+  `BEGIN` and `END`, touching nothing outside
+- file exists without the markers → append the block to the **end**
+- file does not exist → create it with a `# Project Rules` heading, then the block
 
-Không bao giờ ghi đè cả file. Luật riêng của người dùng nằm ngoài khối và phải
-còn nguyên.
+Never overwrite a whole file. The user's own rules live outside the block and
+must survive.
 
-## 4. Tạo `spec.md`
+`AGENTS.md` is what Codex and Pi read. `CLAUDE.md` only imports it, so the rules
+exist in exactly one place and cannot drift.
 
-Chưa có thì tạo theo `core/templates/spec.md`. Hỏi người dùng một câu để điền
-dòng đầu:
+## 4. Create `spec.md`
+
+If missing, create it from `docs/templates/spec.md`. Ask one question to fill the
+first line:
 
 > Sản phẩm này làm gì, cho ai? Một câu thôi.
 
-Đã có `spec.md` thì để nguyên, không đụng.
+If `spec.md` already exists, leave it alone.
 
-## 5. Báo
+## 5. Report
 
-Nói ngắn, bằng tiếng người: đã cài xong, từ giờ gõ được bốn lệnh nào, và lệnh
-nào nên gõ trước.
+Briefly, in plain language: installed, which commands now exist, which one to
+run first.
 
-Nói thêm một câu quan trọng:
+Add one line that matters:
 
 > Lúc nào tôi nói thứ gì bạn không hiểu, gõ `/mkit:ha` — tôi sẽ nói lại kiểu khác.

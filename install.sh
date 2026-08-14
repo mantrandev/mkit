@@ -70,24 +70,30 @@ else
   say "mkit: spec.md đã có, giữ nguyên"
 fi
 
+rm -rf "$TARGET/.mkit/workflows"
+mkdir -p "$TARGET/.mkit/workflows"
 mkdir -p "$TARGET/.claude/skills"
+count=0
 for dir in "$SRC/skills"/*/; do
   name="$(basename "$dir")"
+  cp "$dir/SKILL.md" "$TARGET/.mkit/workflows/$name.md"
   out="$TARGET/.claude/skills/mkit-$name"
   mkdir -p "$out"
   sed "s/^name: $name$/name: mkit-$name/" "$dir/SKILL.md" > "$out/SKILL.md"
+  count=$((count + 1))
 done
-say "mkit: cài 7 lệnh vào .claude/skills"
+say "mkit: $count workflow vào .mkit/workflows (Codex, Pi, mọi agent)"
+say "mkit: $count lệnh vào .claude/skills (Claude Code)"
 
 say ""
-say "Xong. Mở Claude Code trong thư mục này rồi gõ:"
+say "Xong. Dùng được ở cả ba agent:"
 say ""
-say "  /mkit-init        cài chỗ chứa tài liệu, hỏi sản phẩm của bạn làm gì"
-say "  /mkit-plan        bàn một việc, chưa sửa gì"
-say "  /mkit-implement   làm thật"
-say "  /mkit-fix         sửa lỗi"
-say "  /mkit-continue    hôm trước làm tới đâu"
-say "  /mkit-ha          nói lại kiểu khác khi không hiểu"
+say "  Claude Code   gõ /mkit-plan, /mkit-implement, /mkit-fix, /mkit-continue,"
+say "                /mkit-ha, /mkit-init"
+say ""
+say "  Codex, Pi     nói bằng tiếng thường — 'bàn về X', 'làm cho tôi X',"
+say "                'bị lỗi rồi', 'hôm trước làm tới đâu'. Agent đọc AGENTS.md"
+say "                rồi tự tìm đúng workflow."
 say ""
 
 if [ "$IN_GIT" = no ]; then

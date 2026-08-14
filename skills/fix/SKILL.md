@@ -1,64 +1,67 @@
 ---
 name: fix
-description: Sửa một lỗi — tái hiện trước, sửa sau, nghiệm thu bằng chính các bước tái hiện. Dùng khi người dùng báo có thứ đang hỏng.
+description: Fix a bug — reproduce first, fix second, verify with the same steps used to reproduce. Use when the user reports something broken.
 disable-model-invocation: true
 ---
 
-Luật duy nhất không được phá:
+The one rule that cannot be broken:
 
-> **Chưa tái hiện được thì không sửa.**
+> **No reproduction, no fix.**
 
-Sửa khi chưa thấy lỗi tận mắt là đoán. Người dùng không đủ khả năng phát hiện
-bạn vừa đoán, nên họ sẽ tin là đã xong.
+Fixing without seeing the bug is guessing. The user cannot tell that you guessed,
+so they will believe it is done.
 
-## 1. Lấy các bước
+Talk to the user in Vietnamese.
 
-Hỏi người dùng làm gì để thấy nó hỏng. Hỏi bằng thao tác, không hỏi bằng mô tả
-kỹ thuật:
+## 1. Get the steps
+
+Ask what they do to make it break. Ask in actions, not in technical description:
 
 > Bạn bấm những gì để nó hỏng? Kể tôi nghe từng bước, kể cả bước nhỏ nhất.
 
-Nếu họ kể thiếu, hỏi tiếp cho tới khi có đủ một chuỗi thao tác chạy lại được.
-Không đoán hộ.
+If the steps are incomplete, keep asking until you have a runnable sequence.
+Never fill the gaps by guessing.
 
-## 2. Tự làm theo
+## 2. Follow the steps yourself
 
-Làm đúng các bước đó. Có ba kết quả:
+Three outcomes:
 
-**Thấy hỏng** → tái hiện được, đi tiếp.
+**It breaks** → reproduced. Continue.
 
-**Không thấy hỏng** → không sửa. Nói thẳng, rồi hỏi thứ giúp thu hẹp: máy nào,
-trình duyệt nào, tài khoản nào, lúc nào thì bị. Ghi các bước đã thử vào
-`docs/active/` để lần sau không thử lại từ đầu.
+**It does not break** → do not fix. Say so plainly, then ask narrowing
+questions: which machine, which browser, which account, what time of day. Record
+what you tried in `docs/active/` so the next attempt does not start over.
 
-**Không chạy được app** → đó là vấn đề khác và lớn hơn. Xử lý nó trước, nói rõ
-với người dùng là đang xử lý chuyện khác.
+**The app will not run** → that is a different and larger problem. Handle it
+first and tell the user you are handling something else.
 
-## 3. Cổng chốt
+## 3. Decision gate
 
-Sửa lỗi vẫn qua cổng chốt. Rất nhiều lỗi khi sửa lại đẻ ra chính sách mới —
-"chặn bao nhiêu lần", "giữ dữ liệu cũ hay xoá", "báo lỗi ra sao". Chạm sáu mục
-thì `mkit:grill-me`.
+Bug fixes still pass the gate. Many fixes create new policy — how many retries,
+whether old data is kept or deleted, what the error message says. If the six
+items are touched, run `mkit:grill-me`.
 
-## 4. Sửa
+## 4. Fix
 
-Sửa nhỏ nhất đủ hết lỗi. Không dọn code xung quanh, không đổi thứ không liên quan.
+The smallest change that removes the bug. Do not tidy surrounding code, do not
+change anything unrelated.
 
-Người dùng không đọc được diff nên không thấy bạn vừa đổi thêm gì. Mọi thay đổi
-ngoài phạm vi đều là rủi ro họ không nhìn thấy.
+The user cannot read a diff, so they cannot see what else you touched. Every
+change outside the scope is a risk invisible to them.
 
-## 5. Nghiệm thu
+## 5. Verify
 
-Đưa lại **đúng các bước ở bước 1** và nói phải thấy gì:
+Hand back **the exact steps from step 1** and say what must happen now:
 
 > Làm lại đúng các bước lúc nãy — mở giỏ hàng, bấm Thanh toán, chọn Momo. Lần
 > này phải sang được trang thanh toán thay vì đứng im.
 
-Không cần nghĩ kịch bản mới. Người dùng đã tự làm nó một lần rồi.
+No new script needed. They already ran this one once.
 
-## 6. Đóng
+## 6. Close
 
-Xác nhận hết lỗi thì chuyển file sang `docs/done/`, ghi lại các bước tái hiện
-trong đó. Lỗi cũ tái phát sau này sẽ cần đúng thông tin đó.
+Once confirmed fixed, move the file to `docs/done/` with the reproduction steps
+recorded in it. If this bug returns later, that is exactly what is needed.
 
-`spec.md` chỉ sửa nếu lỗi này làm một dòng đang ghi `✅ chạy` thật ra không chạy.
+Only touch `spec.md` if the bug means a line currently marked `✅ chạy` was not
+actually working.

@@ -48,19 +48,7 @@ Người dùng vẫn là người quyết định. Chỉ có ngôn ngữ đổi.
 
 ## Cài
 
-Trong Claude Code, gõ hai lệnh:
-
-```
-/plugin marketplace add mantrandev/MKit
-/plugin install mkit@mkit
-```
-
-Rồi mở dự án của bạn và gõ `/mkit:init` một lần.
-
-Không cần mở terminal, không cần cài gì thêm.
-
-<details>
-<summary>Cách khác — một lệnh trong terminal</summary>
+Một lệnh, cài cho cả **Claude Code, Codex và Pi** cùng lúc:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/mantrandev/MKit/main/install.sh | bash
@@ -69,23 +57,51 @@ curl -fsSL https://raw.githubusercontent.com/mantrandev/MKit/main/install.sh | b
 Cài vào thư mục hiện tại; thêm đường dẫn phía sau để cài chỗ khác. Chạy lại chỉ
 cập nhật khối hướng dẫn, không đụng gì bạn đã viết.
 
-Cách này đặt lệnh vào `.claude/skills` của chính dự án, nên tên lệnh là
-`/mkit-plan` thay vì `/mkit:plan`. Chỉ khác dấu, làm y hệt nhau.
+<details>
+<summary>Chỉ dùng Claude Code — cài dạng plugin</summary>
+
+```
+/plugin marketplace add mantrandev/MKit
+/plugin install mkit@mkit
+```
+
+Rồi mở dự án và gõ `/mkit:init` một lần. Không cần mở terminal.
+
+Cách này cho tên lệnh `/mkit:plan`; cách curl cho `/mkit-plan`. Chỉ khác dấu,
+làm y hệt nhau.
 
 </details>
+
+## Ba agent, một bộ luật
+
+| Agent | Đọc gì | Dùng thế nào |
+| --- | --- | --- |
+| **Claude Code** | `CLAUDE.md` → `AGENTS.md` | Gõ `/mkit-plan`, `/mkit-fix`… |
+| **Codex** | `AGENTS.md` | Nói tiếng thường: *"bàn về X"*, *"bị lỗi rồi"* |
+| **Pi** | `AGENTS.md` | Nói tiếng thường |
+
+Luật nằm **một chỗ duy nhất** trong `AGENTS.md`. `CLAUDE.md` chỉ có một dòng
+`@AGENTS.md` chứ không chép lại — hai bản song song chắc chắn sẽ lệch nhau sau
+vài lần sửa, và lúc đó không ai biết bản nào đúng.
+
+Slash command chỉ là lớp tiện cho Claude Code. Codex và Pi tìm đúng workflow qua
+bảng ở cuối khối `AGENTS.md`, trỏ vào `.mkit/workflows/`.
 
 ## Sáu lệnh
 
 | Lệnh | Làm gì |
 | --- | --- |
-| `/mkit:init` | Cài chỗ chứa tài liệu, hỏi sản phẩm của bạn làm gì |
-| `/mkit:plan` | Bàn một việc, chốt những gì cần chốt — **không sửa code** |
-| `/mkit:implement` | Làm thật, tới khi có thứ bạn tự bấm thử được |
-| `/mkit:fix` | Sửa lỗi — tái hiện trước, sửa sau |
-| `/mkit:continue` | Hôm trước làm tới đâu rồi |
-| `/mkit:ha` | Nói lại kiểu khác khi bạn không hiểu |
+| `/mkit-init` | Cài chỗ chứa tài liệu, hỏi sản phẩm của bạn làm gì |
+| `/mkit-plan` | Bàn một việc, chốt những gì cần chốt — **không sửa code** |
+| `/mkit-implement` | Làm thật, tới khi có thứ bạn tự bấm thử được |
+| `/mkit-fix` | Sửa lỗi — tái hiện trước, sửa sau |
+| `/mkit-continue` | Hôm trước làm tới đâu rồi |
+| `/mkit-ha` | Nói lại kiểu khác khi bạn không hiểu |
 
-`/mkit:ha` là lệnh quan trọng nhất trong sáu cái. Không hiểu mà gật cho qua là
+Trên Codex và Pi thì không gõ lệnh — nói bằng tiếng thường, agent tự tìm đúng
+workflow.
+
+`/mkit-ha` là lệnh quan trọng nhất trong sáu cái. Không hiểu mà gật cho qua là
 cách hỏng phổ biến nhất — lệnh này biến "tôi không hiểu" thành một thứ gõ ra được.
 
 ## Bốn tài liệu

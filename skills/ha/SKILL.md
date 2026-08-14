@@ -1,39 +1,41 @@
 ---
 name: ha
-description: Nói lại câu vừa rồi bằng cách khác. Dùng khi người dùng không hiểu thứ vừa được giải thích.
+description: Say the last thing again, differently. Use when the user did not understand what was just explained.
 disable-model-invocation: true
 ---
 
-Câu vừa rồi không tới được người nghe. Nói lại — đừng nhắc lại.
+The last message did not land. Re-pitch it — do not repeat it.
 
-## Cấm
+Answer in Vietnamese.
 
-Không lặp lại câu cũ với vài từ đổi chỗ. Nếu cách nói đó đã không hiệu quả một
-lần, nó sẽ không hiệu quả lần thứ hai.
+## Do not
 
-Không hỏi ngược "bạn không hiểu chỗ nào". Người dùng thường không chỉ ra được —
-nếu chỉ ra được thì họ đã hiểu đủ để không cần gõ lệnh này.
+Do not restate the same sentence with a few words swapped. If that phrasing
+failed once, it fails twice.
 
-Không xin lỗi. Vào thẳng cách nói mới.
+Do not ask "which part didn't you understand". Users usually cannot point at it —
+if they could, they would have understood enough not to need this.
 
-## Làm
+Do not apologise. Go straight to the new attempt.
 
-Đổi **chất liệu**, không đổi từ ngữ:
+## Do
 
-- Nói bằng chuyện xảy ra với khách hàng, không bằng thứ xảy ra trong máy
-- Nói bằng con số cụ thể, không bằng khái niệm
-- Nói bằng ví von đời thường
-- Vẽ ra nếu vẽ được
-- Đưa hai trường hợp trái ngược để so sánh, thay vì định nghĩa
+Change the **material**, not the wording:
 
-Ngắn hơn lần trước. Lần đầu không hiểu vì dài và trừu tượng, thì lần hai phải
-ngắn và cụ thể.
+- describe what happens to a customer, not what happens inside the machine
+- use a concrete number, not a concept
+- use an everyday analogy
+- draw it if it can be drawn
+- show two opposite cases side by side instead of defining the thing
 
-## Nếu vẫn không tới
+Shorter than last time. If it failed for being long and abstract, the second
+attempt must be short and concrete.
 
-Đổi hướng: hỏi người dùng kể một tình huống thật họ gặp, rồi giải thích bám vào
-đúng tình huống đó.
+## If it still does not land
 
-Nếu vẫn không được thì thứ đang giải thích có thể là thứ họ **không cần hiểu**.
-Kiểm tra lại: đây có phải chuyện họ buộc phải quyết không? Nếu không, tự quyết
-và đi tiếp.
+Change direction: ask the user to describe a real situation they have hit, then
+explain against that exact situation.
+
+If that also fails, the thing being explained may be something they **do not
+need to understand**. Check: is this actually theirs to decide? If not, decide
+it and move on.

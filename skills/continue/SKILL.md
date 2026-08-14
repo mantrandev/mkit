@@ -1,22 +1,24 @@
 ---
 name: continue
-description: Xem đang làm dở những gì và làm tiếp. Dùng khi người dùng mở phiên mới và không nhớ hôm trước làm tới đâu.
+description: Show what is in progress and pick it back up. Use when the user opens a new session and does not remember where they left off.
 disable-model-invocation: true
 ---
 
-Trả lời đúng một câu hỏi: **hôm trước tôi đang làm gì, tới đâu rồi.**
+Answer exactly one question: **what was I doing, and how far did I get.**
 
-## 1. Đọc
+Talk to the user in Vietnamese.
 
-Đọc mọi file trong `docs/active/`. Với mỗi file lấy: tên việc, `Muốn gì`, số
-bước trong `Xong gì` và `Còn gì`, ngày bắt đầu.
+## 1. Read
 
-Không có file nào thì đọc `spec.md` xem có dòng `⏳ đang làm` nào bị bỏ lại
-không — nếu có thì `docs/active/` đã bị xoá nhầm, nói cho người dùng biết.
+Read every file in `docs/active/`. For each: task name, `Muốn gì`, how many
+steps are in `Xong gì` versus `Còn gì`, start date.
 
-## 2. Báo cáo
+If there are none, check `spec.md` for stray `⏳ đang làm` lines — if any exist,
+`docs/active/` was deleted by accident. Tell the user.
 
-Nói bằng tiếng người, không liệt kê tên file:
+## 2. Report
+
+Plain language. Never list filenames.
 
 > Bạn đang dở 2 việc:
 >
@@ -27,24 +29,25 @@ Nói bằng tiếng người, không liệt kê tên file:
 >
 > Tiếp cái nào?
 
-Một việc thì hỏi thẳng: tiếp hay không.
+One task: just ask whether to continue it.
 
-Không việc nào thì nói vậy, và gợi ý `/mkit:plan` hoặc `/mkit:implement`.
+No tasks: say so, and point at `/mkit:plan` or `/mkit:implement`.
 
-## 3. Làm tiếp
+## 3. Resume
 
-Người dùng chọn xong, đọc lại toàn bộ file của việc đó, gồm cả
-`Quyết định trong việc này`, rồi chạy tiếp theo `/mkit:implement` từ bước 3.
+Once they pick, read that task's whole file including
+`Quyết định trong việc này`, then continue from step 3 of `/mkit:implement`.
 
-Không hỏi lại những gì đã ghi trong file. Đó là lý do file đó tồn tại.
+Do not re-ask anything already recorded in the file. That is why it exists.
 
-## 4. Việc bị bỏ quá lâu
+## 4. Tasks left too long
 
-Việc bắt đầu quá hai tuần trước mà không động tới, hỏi trước khi làm tiếp:
+If a task was started more than two weeks ago and untouched since, ask before
+resuming:
 
 > Việc này bỏ dở từ 2 tuần trước. Trong lúc đó sản phẩm đã đổi vài chỗ. Bạn còn
 > muốn làm không, hay bỏ luôn?
 
-Bỏ thì chuyển file sang `docs/done/` với ghi chú là đã huỷ, và xoá dòng
-`⏳ đang làm` tương ứng trong `spec.md`. Không để trạng thái treo — người dùng
-đọc `spec.md` sẽ tưởng nó đang được làm.
+If dropped: move the file to `docs/done/` noting it was cancelled, and remove
+the matching `⏳ đang làm` line from `spec.md`. Never leave a dangling status —
+a user reading `spec.md` would think it is still being worked on.

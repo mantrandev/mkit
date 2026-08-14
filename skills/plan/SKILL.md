@@ -1,42 +1,52 @@
 ---
 name: plan
-description: Bàn về một việc muốn làm, chốt những gì cần chốt, ghi lại — nhưng chưa sửa code. Dùng khi người dùng muốn thăm dò trước, chưa muốn động vào sản phẩm.
+description: Talk through a piece of work, settle what must be settled, write it down — without touching code. Use when the user wants to explore before committing.
 disable-model-invocation: true
 ---
 
-Bàn thôi, không làm. Kết thúc skill này **không có file code nào bị sửa**.
+Talk only. When this skill ends, **no code file has changed**.
 
-Đây là lệnh an toàn để người dùng thăm dò. Giữ đúng lời hứa đó.
+This is the user's safe command for exploring. Keep that promise exactly.
 
-## 1. Hiểu đúng chưa
+Talk to the user in Vietnamese.
 
-Viết lại mong muốn bằng đúng lời người dùng, không dịch sang tiếng kỹ thuật.
-Đưa họ đọc và hỏi thẳng: đúng chưa.
+## 1. Clarify the request
 
-Sai thì sửa và hỏi lại. Không đi tiếp khi chưa có "đúng rồi" — mọi câu hỏi sau
-đó sẽ là câu hỏi cho một bài toán không phải của họ.
+A loop, not a single confirmation.
 
-## 2. Cổng chốt
+Each pass: restate the request in the user's own words, then **try to write its
+acceptance script** — "open X, do Y, you must see Z". Whatever you cannot write
+is what is still unclear. Ask about exactly that.
 
-Đọc `docs/decisions/` trước. Đối chiếu yêu cầu với sáu mục trong khối `MKIT` ở
-`AGENTS.md`.
+Once the script is writable, the request is clear enough. Move on. Never proceed
+while still guessing — every later question would be about a problem that is not
+theirs.
 
-Chạm mục nào mà chưa có quyết định thì chạy `mkit:grill-me` cho từng mục một.
+For visual requests, do not ask in words. Run `mkit:grill-me`, section *When the
+unclear thing is visual*.
 
-## 3. Ghi xuống
+## 2. Decision gate
 
-Tạo `docs/active/<tên-việc>.md` theo `core/templates/active.md`. Điền `Muốn gì`
-và `Còn gì`. `Xong gì` để trống.
+Read `docs/decisions/` first. Check the request against the six items in the
+`MKIT` block of `AGENTS.md`.
 
-Thêm dòng tương ứng vào `spec.md` với trạng thái `⬜ chưa làm`, hoặc `⏳ đang làm`
-kèm link sang file vừa tạo nếu người dùng nói sẽ làm ngay.
+For each item touched with no existing decision, run `mkit:grill-me`, one
+question at a time.
 
-## 4. Dừng
+## 3. Write it down
 
-Báo lại ba thứ, ngắn gọn, bằng tiếng người:
+Create `docs/active/<task-name>.md` from `docs/templates/active.md`. Fill
+`Muốn gì` and `Còn gì`. Leave `Xong gì` empty.
 
-- đã hiểu bạn muốn gì
-- đã chốt những gì
-- muốn làm thật thì gõ `/mkit:implement`
+Add the matching line to `spec.md` as `⬜ chưa làm`, or `⏳ đang làm` with a link
+to the file if the user says they want it built now.
 
-Không tự chuyển sang làm. Người dùng gõ `plan` là đã nói rõ họ chưa muốn.
+## 4. Stop
+
+Report three things, briefly, in plain language:
+
+- what you understood they want
+- what got settled
+- that `/mkit:implement` builds it for real
+
+Do not drift into building. Typing `plan` was them saying they are not ready.
