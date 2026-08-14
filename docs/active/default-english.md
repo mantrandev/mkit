@@ -18,10 +18,12 @@ who explicitly uses another language.
 - [x] Verified that no Vietnamese prose remains in tracked file contents · 2026-08-14
 - [x] Validated all skills, plugin manifests, JSON, shell syntax, source parity, and installer behavior · 2026-08-14
 - [x] Installed the working tree twice in a temporary repository and verified English output without duplicated blocks · 2026-08-14
+- [x] Split the change into documentation and runtime-default commits, then pushed both · 2026-08-14
+- [x] Upgraded the Git marketplace and reinstalled global `mkit@mkit` at `0.1.0+codex.20260814095715` · 2026-08-14
+- [x] Confirmed the marketplace snapshot matches the pushed commit and installed skills match source · 2026-08-14
 
 ## Remaining
 
-- [ ] Commit, push, upgrade the marketplace, and reinstall the global plugin
 - [ ] Start a fresh Codex thread and confirm the reinstalled plugin defaults to English
 
 ## Acceptance
