@@ -1,46 +1,49 @@
-# 0001 Chưng cất thay vì fork repository-harness
+# 0001 Distill instead of forking repository-harness
 
-Ngày: 2026-08-14
+Date: 2026-08-14
 
-## Trạng thái
+## Status
 
 Accepted
 
-## Vì sao phải quyết
+## Context
 
-Ý tưởng "harness cho AI agent" đã có sẵn bản triển khai tốt là
-`hoangnb24/repository-harness`. Nếu mkit chỉ là bản chép lại thì không đáng tồn
-tại. Phải xác định mkit khác ở chỗ nào, và khác đủ nhiều để không nên fork.
+`hoangnb24/repository-harness` already provides a strong implementation of an
+AI-agent harness. mkit would not justify its existence as a copy. It needed a
+clear difference large enough to make a fork the wrong shape.
 
-## Quyết định
+## Decision
 
-mkit là repo độc lập, lấy **ý tưởng** chứ không lấy mã nguồn: cổng thẩm quyền,
-phân loại công việc, chuẩn hoàn thành, cấu trúc `decision.md`.
+mkit is an independent repository that adopts ideas rather than source code:
+the authority gate, work classification, completion standard, and
+`decision.md` structure.
 
-Khác biệt duy nhất nhưng đủ lớn: repository-harness giả định người dùng đọc được
-code. mkit thì không. Vì khác biệt nằm ở **câu chữ mà agent đọc đầu tiên**, nó
-không phủ lên được — phải viết lại chính những câu đó.
+The single but substantial difference is the target user. repository-harness
+assumes the user can read code; mkit does not. Because that difference affects
+the first instructions an agent reads, it cannot be layered on top. Those
+instructions must be rewritten.
 
-## Ràng buộc kỹ thuật
+## Technical constraints
 
-Không phụ thuộc repository-harness ở bất kỳ mức nào. Không Rust, không SQLite.
-Toàn bộ mkit là markdown và skill.
+mkit has no runtime dependency on repository-harness. It uses neither Rust nor
+SQLite. The entire product is Markdown and skills.
 
-Giữ nguyên bản quyền MIT của cả `hoangnb24/repository-harness` và
-`mattpocock/skills` trong `NOTICE`, ghi rõ kế thừa gì và sửa gì.
+Preserve the MIT attribution for both `hoangnb24/repository-harness` and
+`mattpocock/skills` in `NOTICE`, stating what mkit inherits and changes.
 
-## Đã cân nhắc gì khác
+## Alternatives considered
 
-1. **Fork Rust của repository-harness** — thừa kế 21k dòng Rust của phần mà chính
-   tác giả đã đóng băng ở decision 0022 và tuyên bố không phải luồng mặc định.
-2. **Skill pack phủ lên bản cài mặc định của repository-harness** — nhưng lớp
-   dịch phải sửa chính `AGENTS.md` của core, không chen bên cạnh được. Thêm nữa
-   upstream ra 4 decision trong 4 ngày, phủ lên nền đang dịch chuyển thì mất thời
-   gian đuổi theo thay vì xây.
+1. **Fork repository-harness's Rust code.** This would inherit roughly 21,000
+   lines from the layer its author froze in decision 0022 and removed from the
+   default workflow.
+2. **Layer a skill pack over the default repository-harness installation.** The
+   translation layer must change the core `AGENTS.md` itself. It cannot live
+   beside it, and tracking a fast-moving upstream would replace product work
+   with synchronization work.
 
-## Đánh đổi
+## Tradeoffs
 
-mkit nhỏ hơn nhiều so với "làm lại repository-harness". Sau khi upstream đã tự
-bỏ SQLite, risk lane và scoring, khoảng cách còn lại gần như chỉ là lớp dịch
-ngôn ngữ. Chấp nhận phạm vi hẹp, đổi lấy wedge sạch và không phải bảo trì mã
-nguồn của người khác.
+mkit is much smaller than a repository-harness rewrite. After the upstream
+project moved away from SQLite, risk lanes, and scoring, the remaining product
+gap is mainly the plain-language layer. mkit accepts that narrow boundary in
+exchange for a clean wedge and no obligation to maintain someone else's code.

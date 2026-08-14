@@ -1,37 +1,38 @@
 # NOTICE
 
-mkit được xây trên ý tưởng và mã nguồn của hai dự án MIT khác. Cả hai đều đáng
-đọc bản gốc.
+mkit builds on ideas and source material from two MIT-licensed projects. Both
+original projects are worth reading.
 
 ## repository-harness — hoangnb24
 
 https://github.com/hoangnb24/repository-harness
 MIT License, Copyright (c) hoangnb24
 
-mkit kế thừa ba cơ chế từ dự án này:
+mkit inherits three mechanisms from this project:
 
-- cổng thẩm quyền (authority gate) — dừng trước khi sửa khi chính sách chưa
-  được người quyết định, và quy tắc "configurable defaults are not authority";
-- phân loại hình dạng công việc — lượng quy trình tương xứng với quy mô việc;
-- chuẩn hoàn thành dựa trên bằng chứng quan sát được, không dựa trên mô tả.
+- the authority gate, which stops before edits when policy has no owner-approved
+  answer, including the rule that configurable defaults are not authority;
+- work-shape classification, which keeps process proportional to the task; and
+- completion based on observable evidence rather than descriptions.
 
-Cấu trúc `decision.md` và vòng đời `Proposed / Accepted / Superseded / Rejected`
-lấy trực tiếp từ `docs/templates/decision.md`. Cơ chế khối có mốc đầu-cuối trong
-`AGENTS.md` và `CLAUDE.md` lấy từ `HARNESS:BEGIN` / `HARNESS:END`.
+The `decision.md` structure and `Proposed / Accepted / Superseded / Rejected`
+lifecycle come directly from `docs/templates/decision.md`. The marked-block
+mechanism in `AGENTS.md` and `CLAUDE.md` comes from `HARNESS:BEGIN` and
+`HARNESS:END`.
 
-mkit không dùng tầng Rust CLI và SQLite của dự án gốc. Tác giả đã đóng băng tầng
-đó ở decision 0022 và chuyển trọng tâm sang tài liệu Git-native ở decision 0019.
+mkit does not use the original project's Rust CLI or SQLite layer. Decision 0022
+froze that layer, and decision 0019 moved the default toward Git-native documents.
 
 ## skills — Matt Pocock
 
 https://github.com/mattpocock/skills
 MIT License, Copyright (c) 2026 Matt Pocock
 
-Skill `mkit:grill-me` là bản fork của `grilling`. Giữ nguyên: cây thiết kế,
-khái niệm frontier, định dạng câu hỏi kèm câu trả lời đề xuất, và nguyên tắc
-"tìm dữ kiện là việc của agent, quyết định là việc của người dùng".
+The `mkit:grill-me` skill is a fork of `grilling`. It preserves the design tree,
+the frontier concept, the question format with a recommended answer, and the
+rule that finding facts belongs to the agent while decisions belong to the user.
 
-Khác bản gốc ở hai điểm, do đối tượng người dùng khác:
+It differs from the original in two ways because its intended user is different:
 
-- hỏi một câu mỗi lần thay vì cả frontier trong một vòng;
-- mọi lựa chọn phải nêu hậu quả cụ thể, và không được dùng thuật ngữ kỹ thuật.
+- it asks one question at a time instead of the whole frontier in one round; and
+- every option must state concrete consequences without technical jargon.

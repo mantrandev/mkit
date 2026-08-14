@@ -1,37 +1,37 @@
-# Phân loại câu trả lời của grill-me
+# Classify answers from grill-me
 
-Bắt đầu: 2026-08-14
-Liên quan `spec.md`: Workflow `grill-me` và `docs/decisions/`
+Started: 2026-08-14
+Related `spec.md` entry: `grill-me` workflow and `docs/decisions/`
 
-## Muốn gì
+## Desired outcome
 
-Khi dùng `grill-me` trong lúc planning, không cập nhật tất cả câu trả lời vào
-`docs/decisions/`. Làm theo cách của `repository-harness`: ghi lựa chọn của task
-vào active plan và chỉ nâng lựa chọn lâu dài thành decision riêng.
+When `grill-me` runs during planning, it must not write every answer into
+`docs/decisions/`. Follow the `repository-harness` boundary: record task choices
+in the active plan and promote only lasting choices into separate decisions.
 
-## Xong gì
+## Completed
 
-- [x] Đối chiếu workflow và template hiện tại của `repository-harness` · 2026-08-14
-- [x] Xác định `plan` đang gọi `grill-me` trước khi tạo active plan · 2026-08-14
-- [x] Đổi thứ tự và tiêu chí phân loại trong workflow nguồn · 2026-08-14
-- [x] Cài working tree vào repo tạm và kiểm tra các file sinh ra · 2026-08-14
+- [x] Compared the current `repository-harness` workflow and template · 2026-08-14
+- [x] Found that `plan` called `grill-me` before creating an active plan · 2026-08-14
+- [x] Changed workflow ordering and classification criteria · 2026-08-14
+- [x] Installed the working tree into a temporary repository and inspected generated files · 2026-08-14
 
-## Còn gì
+## Remaining
 
-- [ ] Chạy một phiên planning mới và xác nhận câu trả lời riêng của task không tạo decision
+- [ ] Run a fresh planning session and confirm that a task-local answer creates no separate decision
 
-## Cách tự kiểm
+## Acceptance
 
-Trong một repo thử, chạy planning cho một tính năng có hai câu cần chốt: một lựa
-chọn chỉ ảnh hưởng cách làm task đó và một lựa chọn thay đổi chính sách chung.
-Sau khi trả lời, `docs/active/<task>.md` phải chứa cả hai; `docs/decisions/` chỉ
-có thêm lựa chọn thay đổi chính sách chung.
+In a test repository, plan a feature with two open choices: one that affects only
+the current task and one that changes shared policy. After answering,
+`docs/active/<task>.md` must contain both answers while `docs/decisions/` gains
+only the shared-policy choice.
 
-## Quyết định trong việc này
+## Task decisions
 
-- 2026-08-14: Dùng ranh giới của `repository-harness`: task-local nằm trong active plan; lựa chọn lâu dài mới được nâng thành decision riêng.
+- 2026-08-14: Use the `repository-harness` boundary: task-local choices stay in the active plan, and only lasting choices are promoted into separate decisions.
 
-## Ghi chú kỹ thuật
+## Technical notes
 
-Kiểm tra parity giữa `AGENTS.md` và `core/AGENTS.block.md`, giữa hai active
-template, rồi kiểm tra bản cài trong thư mục tạm.
+Check parity between `AGENTS.md` and `core/AGENTS.block.md`, between both active
+templates, and in files produced by a temporary installation.

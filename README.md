@@ -1,206 +1,208 @@
 # mkit
 
-Bộ kit harness workflow cho AI agent, dành cho người **không đọc được code**.
+An AI-agent harness workflow for people who **cannot read code**.
 
-## Vấn đề
+## The problem
 
-Các harness cho AI agent hiện có đều tốt — và đều giả định người dùng là lập
-trình viên. Chúng dừng lại đúng lúc để hỏi con người, nhưng hỏi bằng thứ tiếng
-mà người không biết code không trả lời được:
+Existing agent harnesses are strong, but they usually assume the user is a
+developer. They stop at the right moment for human judgment, then ask in terms a
+non-technical user cannot answer:
 
-> *Add rate limiting* — thiếu quota, trusted key, enforcement topology, response
-> contract. Dừng.
+> *Add rate limiting* lacks a quota, trusted key, enforcement topology, and
+> response contract. Stop.
 
-Người dùng gõ *"làm sao cho web đừng bị spam"*. Họ đứng hình. Không phải vì lười
-— vì họ không có khái niệm để trả lời.
+The user said, "Stop people from spamming my website." They cannot answer the
+technical question because they do not have the concepts behind it.
 
-Bỏ luôn câu hỏi đó thì tệ hơn: agent tự chọn một con số, ghi vào code, và người
-dùng **không đủ khả năng phát hiện**. Họ chỉ biết khi khách hàng kêu.
+Skipping the question is worse. The agent silently chooses a number and writes
+it into code, while the user cannot detect the invented policy. They discover it
+only after a customer complains.
 
-## mkit làm gì
+## What mkit does
 
-mkit không gỡ cổng chặn. mkit đứng ở cổng làm **người phiên dịch hai chiều**.
+mkit keeps the decision gate and acts as a **two-way translator** at that gate.
 
-**Dịch xuống** — câu hỏi kỹ thuật thành hậu quả cảm được:
+**Translate down** — turn a technical question into consequences the user can picture:
 
+```text
+❓ Decision needed — How aggressively should repeated clicks be blocked?
+
+A. Strict — 20 attempts per minute
+   → Gain: almost all spam accounts are stopped
+   → Tradeoff: a real customer clicking quickly may be blocked for 1 minute
+
+B. Lenient — 100 attempts per minute
+   → Gain: real customers are almost never blocked by mistake
+   → Tradeoff: several dozen spam accounts may need manual cleanup each day
+
+➡️ I recommend A because manual cleanup is expensive, while a customer blocked
+by mistake can retry after 1 minute.
 ```
-❓ Cần bạn chốt — Chặn người bấm quá nhanh ở mức nào?
 
-A. Chặt tay — 20 lần/phút
-   → Được: gần như hết tài khoản rác
-   → Mất: khách thật bấm nhanh giờ cao điểm có thể bị chặn nhầm, đợi 1 phút
+**Translate up** — turn technical evidence into steps the user can perform:
 
-B. Lỏng tay — 100 lần/phút
-   → Được: khách thật gần như không bị chặn nhầm
-   → Mất: mỗi ngày vài chục tài khoản rác phải dọn tay
-
-➡️ Tôi nghiêng về A vì dọn rác rất tốn công, còn khách bị chặn nhầm chỉ đợi 1 phút.
-```
-
-**Dịch lên** — bằng chứng kỹ thuật thành thao tác tự bấm được:
-
-```
+```text
 ✗ 23 tests passed, coverage 87%
-✓ Mở /dang-ky, bấm Gửi 21 lần liên tiếp. Lần thứ 21 phải hiện "Thử lại sau 1 phút".
+✓ Open /sign-up and click Submit 21 times. Attempt 21 must show "Try again in 1 minute."
 ```
 
-Người dùng vẫn là người quyết định. Chỉ có ngôn ngữ đổi.
+The user still decides. Only the language changes.
 
-## Cài
+## Install
 
 ### Claude Code
 
-Hai lệnh, không cần mở terminal:
+Two commands:
 
-```
+```text
 /plugin marketplace add mantrandev/mkit
 /plugin install mkit@mkit
 ```
 
-Rồi mở dự án của bạn và gõ `/mkit:init` một lần.
+Open your project and run `/mkit:init` once.
 
 ### Codex
 
-Chạy trong terminal:
+Run:
 
 ```bash
 codex plugin marketplace add mantrandev/mkit --ref main
 codex plugin add mkit@mkit
 ```
 
-Mở một phiên Codex mới trong dự án của bạn rồi gõ `$mkit:init` một lần. Sau khi
-lệnh này chạy xong, mở phiên mới thêm lần nữa để Codex đọc luật vừa được cài vào
-dự án.
+Open a new Codex thread in your project and run `$mkit:init` once. Start another
+new thread afterward so Codex loads the newly installed project rules.
 
-Codex cũng có trình duyệt plugin. Gõ `/plugins`, chọn marketplace `mkit`, rồi cài
-plugin `mkit`. Sau khi cài phải mở phiên mới.
+You can also open `/plugins`, select the `mkit` marketplace, and install the
+`mkit` plugin. Start a new thread after installation.
 
 <details>
-<summary>Không cài plugin — một lệnh trong terminal</summary>
+<summary>Install without a plugin using one terminal command</summary>
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/mantrandev/mkit/main/install.sh | bash
 ```
 
-Cài vào thư mục hiện tại; thêm đường dẫn phía sau để cài chỗ khác. Chạy lại chỉ
-cập nhật khối hướng dẫn, không đụng gì bạn đã viết.
+This installs into the current directory. Add a target path after the command to
+install elsewhere. Running it again refreshes the marked instruction blocks and
+preserves everything outside them.
 
-Cách này cài luật và workflow cho Codex/Pi mà không cài plugin.
+This path installs rules and workflows for Codex and Pi without a plugin.
 
 </details>
 
-## Ba agent, một bộ luật
+## Three agents, one rule set
 
-| Agent | Đọc gì | Dùng thế nào |
+| Agent | Reads | Usage |
 | --- | --- | --- |
-| **Claude Code** | `CLAUDE.md` → `AGENTS.md` | Gõ `/mkit:plan`, `/mkit:fix`… |
-| **Codex** | plugin → `AGENTS.md` | Gõ `$mkit:init` một lần, sau đó nói tiếng thường |
-| **Pi** | `AGENTS.md` | Nói tiếng thường |
+| **Claude Code** | `CLAUDE.md` → `AGENTS.md` | Run `/mkit:plan`, `/mkit:fix`, and the other slash commands |
+| **Codex** | plugin → `AGENTS.md` | Run `$mkit:init` once, then use plain-language requests |
+| **Pi** | `AGENTS.md` | Use plain-language requests |
 
-Luật nằm **một chỗ duy nhất** trong `AGENTS.md`. `CLAUDE.md` chỉ có một dòng
-`@AGENTS.md` chứ không chép lại — hai bản song song chắc chắn sẽ lệch nhau sau
-vài lần sửa, và lúc đó không ai biết bản nào đúng.
+Rules live in exactly one place: `AGENTS.md`. `CLAUDE.md` contains only an
+`@AGENTS.md` import. Parallel copies inevitably drift and leave the agent without
+a clear source of truth.
 
-Slash command chỉ là lớp tiện cho Claude Code. Codex và Pi tìm đúng workflow qua
-bảng ở cuối khối `AGENTS.md`, trỏ vào `.mkit/workflows/`.
+Slash commands are a Claude Code convenience. Codex and Pi select the same
+workflow through the routing table at the end of the `MKIT` block, which points
+to `.mkit/workflows/`.
 
-## Sáu lệnh
+## Six commands
 
-| Lệnh | Làm gì |
+| Command | Purpose |
 | --- | --- |
-| `/mkit:init` | Cài chỗ chứa tài liệu, hỏi sản phẩm của bạn làm gì |
-| `/mkit:plan` | Bàn một việc, chốt những gì cần chốt — **không sửa code** |
-| `/mkit:implement` | Làm thật, tới khi có thứ bạn tự bấm thử được |
-| `/mkit:fix` | Sửa lỗi — tái hiện trước, sửa sau |
-| `/mkit:continue` | Hôm trước làm tới đâu rồi |
-| `/mkit:ha` | Nói lại kiểu khác khi bạn không hiểu |
+| `/mkit:init` | Create the document structure and ask what the product does |
+| `/mkit:plan` | Discuss and settle a task without editing code |
+| `/mkit:implement` | Build until the user can test the result themselves |
+| `/mkit:fix` | Reproduce a bug first, then fix it |
+| `/mkit:continue` | Recover unfinished work from an earlier session |
+| `/mkit:ha` | Explain the last point a different way |
 
-Sau bước `$mkit:init`, trên Codex và Pi chỉ cần nói bằng tiếng thường, agent tự
-tìm đúng workflow.
+After `$mkit:init`, Codex and Pi users can speak normally. The agent selects the
+matching workflow.
 
-`/mkit:ha` là lệnh quan trọng nhất trong sáu cái. Không hiểu mà gật cho qua là
-cách hỏng phổ biến nhất — lệnh này biến "tôi không hiểu" thành một thứ gõ ra được.
+`/mkit:ha` is the most important command. A user who does not understand often
+agrees instead of asking. This command makes "I do not understand" easy to say.
 
-## Bốn tài liệu
+## Four documents
 
-| File | Trả lời |
+| File | Answers |
 | --- | --- |
-| `spec.md` | Sản phẩm làm được gì — bảng tổng, trạng thái từng dòng |
-| `docs/decisions/` | Luật áp cho mọi việc sau |
-| `docs/active/` | Đang làm gì, tới đâu, còn gì |
-| `docs/done/` | Đã làm gì, chứng minh ra sao |
+| `spec.md` | What the product can do, with status on every line |
+| `docs/decisions/` | Lasting rules that future work must inherit |
+| `docs/active/` | What is in progress, how far it got, and what remains |
+| `docs/done/` | What was completed and how it was verified |
 
-Mọi câu trả lời trong lúc planning được ghi vào `docs/active/` trước. Chỉ lựa
-chọn lâu dài về product, architecture, dữ liệu, bảo mật, tương thích hoặc cách
-làm mặc định mà các việc sau phải tuân theo mới có thêm một file trong
-`docs/decisions/`.
+Every answer given during planning starts in `docs/active/`. A separate file in
+`docs/decisions/` is created only for a lasting product, architecture, data,
+security, compatibility, validation, or default-workflow choice that future
+tasks must inherit.
 
-Chỉ `spec.md` là thứ bạn cần đọc. Mỗi dòng tự khai trạng thái:
+`spec.md` is the only document the target user must read. Each line declares its
+own status:
 
 ```markdown
-- [x] Đăng nhập bằng email    ✅ chạy · 2026-08-02
-- [ ] Đăng nhập Google        ⏳ đang làm · docs/active/google-login.md
-- [ ] Quên mật khẩu           ⬜ chưa làm
+- [x] Email sign-in     ✅ working · 2026-08-02
+- [ ] Google sign-in    ⏳ in progress · docs/active/google-login.md
+- [ ] Password reset    ⬜ not started
 ```
 
-## Cổng chốt
+## Decision gate
 
-mkit dừng lại hỏi khi việc chạm một trong sáu thứ sau:
+mkit stops when a task touches one of six categories:
 
-**con số/ngưỡng · tiền · dữ liệu cá nhân · xoá không hồi phục · gọi bên thứ ba · phân quyền**
+**numbers and thresholds · money · personal data · irreversible deletion · third-party calls · permissions**
 
-Ngoài sáu thứ đó, agent tự quyết hết — tên biến, chia file, chọn thư viện, dựng
-giao diện. Cổng chốt được thiết kế để **hiếm khi nổ**. Đổi màu một cái nút không
-tốn câu hỏi nào.
+Outside those categories, the agent decides implementation details such as
+variable names, file boundaries, libraries, and routine layout choices. The gate
+is designed to activate rarely. Changing a button color requires no policy question.
 
-Nguyên tắc phân chia: agent tự quyết khi **sai thì phát hiện được và sửa rẻ**.
-Phải hỏi khi **sai thì bạn không phát hiện được**.
+The dividing rule is simple: the agent decides when a mistake is cheap and easy
+to detect. The user decides when a mistake could remain invisible to them.
 
-Việc phải hỏi không đồng nghĩa với việc phải tạo luật chung. Cổng chốt quyết
-định **có cần hỏi hay không**; thời hạn hiệu lực của câu trả lời quyết định **ghi
-ở task hiện tại hay nâng thành luật cho các task sau**.
+Needing a question does not automatically create a shared rule. The gate decides
+**whether the agent must ask**. The answer's lifetime decides **whether it stays
+in the current task or is promoted for future work**.
 
-## Những thứ bạn không nhìn thấy
+## What the user cannot see
 
-Bạn không đọc được code, nên có một loạt thứ hỏng mà bạn **không có cách nào
-phát hiện**. mkit bắt agent tự canh chúng:
+People who cannot read code also cannot detect several common failure modes.
+mkit makes the agent responsible for them:
 
-- **Viết ít nhất có thể.** Không thêm tính năng bạn không xin. Không dựng cấu
-  trúc phức tạp cho thứ dùng một lần. 200 dòng mà 50 dòng đủ thì viết lại.
-- **Chỉ đụng thứ buộc phải đụng.** Không "dọn dẹp" code xung quanh, không sửa
-  format, không đổi thứ đang chạy tốt. Mỗi dòng bị sửa phải truy ngược được về
-  yêu cầu của bạn.
-- **Không xoá, không reset, không force-push** trừ khi bạn bảo làm đúng thế.
-- **Thấy cách đơn giản hơn thì phải nói**, trước khi làm. Bạn không có ai khác
-  phản biện hộ.
-- **Cái gì chưa làm, chưa chạy, chưa thử thì phải khai ra.** Bạn không tự kiểm
-  được, nên im lặng sẽ bị hiểu là đã kiểm hết.
+- **Write the minimum.** Do not add unrequested features or abstractions for a
+  single use. Rewrite 200 lines when 50 are enough.
+- **Touch only what the request requires.** Do not clean adjacent code, reformat
+  working files, or alter unrelated behavior.
+- **Do not delete, reset, or force-push** unless the user requests that exact operation.
+- **Present a simpler path before building** when it is faster, safer, or easier to change.
+- **Disclose every untested or unfinished part.** Silence sounds like complete verification.
 
-## Đường lùi
+## Rollback
 
-Bạn không cần biết git. Agent tự lưu mốc giúp bạn — trước mỗi lần dừng lại hỏi,
-và mỗi lần một việc xong.
+The user does not need to know git. The agent creates local checkpoints before
+stopping mid-work and after a task is accepted.
 
-Muốn quay lại thì nói *"quay về lúc nãy"*. Bạn sẽ được hỏi kiểu này:
+When asked to go back, the agent presents choices like:
 
-```
-Quay về lúc nào?
-1. Trước khi tôi sửa nút Thanh toán — 10 phút trước
-2. Trước khi thêm đăng nhập Google — hôm qua
+```text
+Return to which point?
+1. Before fixing the Checkout button — 10 minutes ago
+2. Before adding Google sign-in — yesterday
 ```
 
-Không có mã băm, không có tên nhánh, không có thuật ngữ. Chọn số là xong.
+No hashes and no branch names. The user chooses a number.
 
-Agent **không bao giờ tự đẩy code đi đâu** — lưu mốc là việc của nó, còn gửi
-code ra ngoài là quyết định của bạn.
+The agent never pushes by default. A local checkpoint is a safety duty; sending
+code elsewhere requires an explicit user request.
 
-## Dựa trên
+## Built from
 
-- [`hoangnb24/repository-harness`](https://github.com/hoangnb24/repository-harness) — cổng thẩm quyền, phân loại công việc, chuẩn hoàn thành, cấu trúc `decision.md`
-- [`mattpocock/skills`](https://github.com/mattpocock/skills) — pattern `grilling`
+- [`hoangnb24/repository-harness`](https://github.com/hoangnb24/repository-harness) — authority gate, work classification, completion standard, and `decision.md` structure
+- [`mattpocock/skills`](https://github.com/mattpocock/skills) — the `grilling` pattern
 
-Cả hai đều MIT. Chi tiết kế thừa gì, sửa gì: [`NOTICE`](./NOTICE).
+Both projects use the MIT license. See [`NOTICE`](./NOTICE) for the exact inherited
+and changed behavior.
 
-## Giấy phép
+## License
 
 MIT
