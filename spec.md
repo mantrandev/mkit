@@ -21,7 +21,7 @@ verified with executable or observable evidence; written code alone does not cou
 - [x] `implement` — build until the user can test it — ✅ working · 2026-08-14
 - [x] `fix` — reproduce before changing anything — ✅ working · 2026-08-14
 - [x] `continue` — recover unfinished work — ✅ working · 2026-08-14
-- [ ] `grill-me` — ask one question at a time and show each option's gain and tradeoff — ⏳ in progress · [answer classification](docs/active/phan-loai-cau-tra-loi-grill-me.md)
+- [x] `grill-me` — ask one question at a time, show each option's consequences, and route the settled answer by meaning — ✅ working · 2026-08-14
 - [x] `ha` — explain the last point a different way — ✅ working · 2026-08-14
 - [x] `init` — install mkit into a target repository — ✅ working · 2026-08-14
 
@@ -29,7 +29,8 @@ verified with executable or observable evidence; written code alone does not cou
 
 - [x] `spec.md` — one product inventory with status on every line — ✅ working · 2026-08-14
 - [x] `docs/decisions/` — lasting rules with `Superseded` history — ✅ working · 2026-08-14
-- [x] `docs/active/` and `docs/done/` — ✅ working · 2026-08-14
+- [x] `docs/active/` — only durable work in progress that must survive the current conversation — ✅ working · 2026-08-14
+- [x] `docs/done/` — completed or cancelled durable work — ✅ working · 2026-08-14
 
 ## Installation
 

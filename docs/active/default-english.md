@@ -13,8 +13,8 @@ and filename of every accepted historical decision.
 
 - [x] Defined the tracked-content acceptance boundary · 2026-08-14
 - [x] Preserved durable decision filenames to avoid breaking links and history · 2026-08-14
-- [x] Translated every mutable and distributed tracked content surface · 2026-08-14
-- [x] Verified that Vietnamese prose remains only in immutable historical decisions · 2026-08-14
+- [x] Translated every distributed tracked content surface · 2026-08-14
+- [x] Verified that accepted historical decisions retain their original language · 2026-08-14
 - [x] Validated all skills, plugin manifests, JSON, shell syntax, source parity, and installer behavior · 2026-08-14
 - [x] Installed the working tree twice in a temporary repository and verified English output without duplicated blocks · 2026-08-14
 - [x] Split the change into documentation and runtime-default commits, then pushed both · 2026-08-14
@@ -25,20 +25,22 @@ and filename of every accepted historical decision.
 - [x] Fixed gate ordering, visual ordering, fallback plan creation, and localized output · 2026-08-14
 - [x] Generated Codex cachebuster `0.1.0+codex.20260814101904` and reran validation · 2026-08-14
 - [x] Forward-tested English and Vietnamese planning flows in isolated repositories · 2026-08-14
+- [x] Generated Codex cachebuster `0.1.0+codex.20260814105110` after the adaptive-record workflow update · 2026-08-14
 
 ## Remaining
 
-- [ ] Upgrade and reinstall `mkit@mkit` at `0.1.0+codex.20260814101904`
+- [ ] Upgrade and reinstall `mkit@mkit` at `0.1.0+codex.20260814105110`
 - [ ] Start a fresh Codex thread and confirm the reinstalled plugin defaults to English
 
 ## Acceptance
 
-Confirm that Vietnamese prose exists only in immutable historical decisions.
-Install mkit into a temporary repository and confirm its instructions,
-templates, workflow prompts, and terminal output are English. Run planning in
-English and Vietnamese: the gate must run before the first edit, every active
-plan must be fully populated, and user-facing output must follow the established
-language. Reinstall `mkit@mkit` and confirm Codex reports a new cachebuster.
+Confirm that distributed instructions, templates, workflow prompts, and terminal
+output default to English. When a user establishes another language, filled task
+prose and decision prose may follow it while headings and status labels remain
+English. Run planning in English and Vietnamese: the gate must run before the
+first edit, active records must exist only for durable work, and user-facing
+output must follow the established language. Reinstall `mkit@mkit` and confirm
+Codex reports a new cachebuster.
 
 ## Task decisions
 

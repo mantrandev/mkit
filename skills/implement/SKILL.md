@@ -23,8 +23,8 @@ than two questions, and each one erodes their belief that you understood them.
 For visual requests, run `mkit:grill-me`, section *When the unclear thing is
 visual* — build variants, do not ask in words.
 
-If `docs/active/` already holds a file for this task (from an earlier
-`/mkit:plan`), read it instead of starting over.
+If `docs/active/` already holds a file for this task, read it instead of
+starting over.
 
 ## 2. Decision gate
 
@@ -33,21 +33,33 @@ decision, run `mkit:grill-me`.
 
 If nothing is touched, ask nothing — go straight to step 3.
 
-## 3. Build
+## 3. Choose the work record
 
-Update `Completed` in `docs/active/<task>.md` as you go. The user may close their
-laptop at any moment; that file is the only thing that lets them come back.
+Keep bounded work in the current conversation when it can finish in this
+session without coordination or a recovery trail.
+
+For work that spans sessions, requires coordination, or needs recovery, create
+or reuse `docs/active/<task>.md` from the template and fill every placeholder.
+Mark the matching `spec.md` line `⏳ in progress` with a link to that record.
+
+If bounded work becomes durable before you stop, create the active record then
+with everything completed, remaining, and needed to resume.
+
+## 4. Build
+
+When an active record exists, update `Completed` as you go.
 
 **Stop mid-work** on any of the five signals in the `MKIT` block. When you stop:
 
-1. commit a checkpoint
-2. say what changed and whether the app still runs
-3. say how to go back
-4. then ask
+1. create or update the active record with what is done and what remains
+2. commit a checkpoint
+3. say what changed and whether the app still runs
+4. say how to go back
+5. then ask
 
 Never pick "the safest option" and keep going.
 
-## 4. Completion standard
+## 5. Completion standard
 
 Write an acceptance script the user can run with their own hands, with what they
 must see. Concrete enough to follow without asking anything further.
@@ -57,12 +69,11 @@ No test counts. No coverage. No list of changed files.
 If you cannot write that script, it is not done — say so plainly and say what is
 missing.
 
-## 5. Close the task
+## 6. Close the task
 
 Once the user confirms they see it working:
 
-- fill `Acceptance` in the `docs/active/` file
-- move the file to `docs/done/`
+- if an active record exists, fill `Acceptance` and move it to `docs/done/`
 - change the matching `spec.md` line to `✅ working` with today's date
 
 If the user says it is not right, go back to **step 1**, not step 3. Most of the

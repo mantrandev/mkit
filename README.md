@@ -130,13 +130,18 @@ agrees instead of asking. This command makes "I do not understand" easy to say.
 | --- | --- |
 | `spec.md` | What the product can do, with status on every line |
 | `docs/decisions/` | Lasting rules that future work must inherit |
-| `docs/active/` | What is in progress, how far it got, and what remains |
+| `docs/active/` | Durable work in progress, how far it got, and what remains |
 | `docs/done/` | What was completed and how it was verified |
 
-Every answer given during planning starts in `docs/active/`. A separate file in
-`docs/decisions/` is created only for a lasting product, architecture, data,
-security, compatibility, validation, or default-workflow choice that future
-tasks must inherit.
+Planning stays in the conversation by default. Create `docs/active/` only for
+work already underway that must survive the current conversation because it
+spans sessions, requires coordination, or needs a recovery trail.
+
+When a choice is settled, update `spec.md` if it defines current product
+behavior or acceptance. Create a separate file in `docs/decisions/` only when
+future work must inherit a consequential choice and its reason. One answer may
+update both: the specification says what is true now, while the decision
+preserves why it was chosen.
 
 `spec.md` is the only document the target user must read. Each line declares its
 own status:
@@ -160,9 +165,10 @@ is designed to activate rarely. Changing a button color requires no policy quest
 The dividing rule is simple: the agent decides when a mistake is cheap and easy
 to detect. The user decides when a mistake could remain invisible to them.
 
-Needing a question does not automatically create a shared rule. The gate decides
-**whether the agent must ask**. The answer's lifetime decides **whether it stays
-in the current task or is promoted for future work**.
+Needing a question does not automatically create an active task or a shared
+rule. The gate decides **whether the agent must ask**. The answer's meaning
+decides whether it updates current product truth, lasting rationale, active
+recovery context, or only the current bounded task.
 
 ## What the user cannot see
 

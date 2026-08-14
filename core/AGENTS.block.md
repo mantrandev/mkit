@@ -78,8 +78,9 @@ Before editing any file, check the request against these six:
 6. **Permissions** — who may do what, who may see what
 
 If the request touches any of them and `docs/decisions/` has no matching
-decision: **stop before editing product files**, create the current
-`docs/active/<task>.md` if it does not exist, then run `mkit:grill-me`.
+decision: **stop before editing product files**, then run `mkit:grill-me`.
+Keep the open question in the conversation until the user answers it. Do not
+create an active task merely to hold a question.
 
 A library's default value is not a decision. Nobody chose that number. Taking a
 default and treating it as settled forges the user's authority.
@@ -99,10 +100,11 @@ user who picks the wrong command loses a few questions, not the guardrail.
 
 When a question arises after files are already changed:
 
-1. commit a checkpoint before asking
-2. report state in plain language: what changed, whether the app still runs
-3. say how to go back
-4. then ask
+1. create or update `docs/active/<task>.md` so the work can be resumed
+2. commit a checkpoint before asking
+3. report state in plain language: what changed, whether the app still runs
+4. say how to go back
+5. then ask
 
 Never pick "the safest option" and continue. That is deciding policy for them.
 
@@ -146,7 +148,7 @@ plain language.
 | --- | --- |
 | `spec.md` | What the product does — full list, status per line |
 | `docs/decisions/NNNN-*.md` | Rules that bind every future task |
-| `docs/active/<task>.md` | What is in progress, how far, what is left |
+| `docs/active/<task>.md` | Durable work in progress, how far, what is left |
 | `docs/done/<task>.md` | What was done, and how it was proven |
 
 `spec.md` is the only document the user actually reads. Every line declares its
@@ -161,27 +163,35 @@ decided.
 
 ### Where answers go
 
-Every answer starts in `Task decisions` in the current
-`docs/active/<task>.md`. Promote it into `docs/decisions/` only when both are
-true:
+Keep unsettled choices and bounded planning in the current conversation. Route
+each settled answer by what it means:
 
-1. future tasks must inherit it
+- update `spec.md` when it defines current product behavior or acceptance
+- create `docs/decisions/` when future tasks must inherit a consequential
+  choice and its reason
+- append to `Task decisions` in an existing `docs/active/<task>.md` only when
+  the detail is needed to resume that active work
+- keep a bounded implementation detail in the current conversation when no
+  durable record is warranted
+
+A decision record requires both conditions:
+
+1. future tasks must inherit the choice
 2. it materially changes lasting product behavior, architecture, data
    ownership, security or recovery policy, public compatibility, validation
    requirements, or the source-of-truth/default workflow
 
-Touching one of the six decision-gate items is not enough by itself. A
-task-local implementation or acceptance choice stays only in the active file.
+One answer may update both `spec.md` and a decision. The specification says
+what is true now; the decision preserves why the lasting choice was made.
+Touching one of the six decision-gate items is not enough by itself.
+
+Create an active record only when work is underway and must survive the current
+conversation because it spans sessions, requires coordination, or needs a
+recovery trail. Every active record is work in progress; a bounded task can use
+the current conversation instead.
 
 Do not ask the user to classify their answer. Decide it yourself, then report
-one line in the user's established language so they can object. These are the
-English fallback meanings:
-
-> Recorded in this task only; no shared rule was created.
-
-or
-
-> Recorded in this task and promoted to a shared rule for future work.
+where it was recorded in the user's established language so they can object.
 
 ### Completion standard
 
@@ -206,6 +216,12 @@ cannot check, so silence reads to them as "everything was checked".
 Two registers. Never mix them.
 
 **To yourself** — precise technical terms, as terse as possible.
+
+**In new project records** — write filled prose in the user's established
+language, but preserve mkit template headings and status labels exactly in
+English. In particular, keep `✅ working`, `⏳ in progress`, `⬜ not started`,
+`Accepted`, and `Superseded by NNNN` unchanged. When editing an existing record,
+preserve its current heading and status schema.
 
 **To the user** — these words and everything like them are forbidden:
 

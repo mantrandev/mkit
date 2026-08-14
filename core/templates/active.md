@@ -3,6 +3,10 @@
 Started: YYYY-MM-DD
 Related `spec.md` entry: <feature group · line>
 
+Use this record only for work already underway that must survive the current
+conversation because it spans sessions, requires coordination, or needs a
+recovery trail.
+
 ## Desired outcome
 
 <Restate the request in the user's own words. Do not translate it into technical
@@ -24,8 +28,8 @@ language. The user must be able to say "that is right" or "that is not what I me
 
 - YYYY-MM-DD: <Choice settled while discussing this task, with its reason.>
 
-Every answer starts here. Add a separate file in `docs/decisions/` only for a
-lasting choice that future work must inherit.
+Record only details needed to resume this work. Put current product behavior in
+`spec.md` and lasting consequential choices in `docs/decisions/`.
 
 ## Technical notes
 

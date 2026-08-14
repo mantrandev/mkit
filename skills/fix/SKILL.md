@@ -28,8 +28,9 @@ Three outcomes:
 **It breaks** → reproduced. Continue.
 
 **It does not break** → do not fix. Say so plainly, then ask narrowing
-questions: which machine, which browser, which account, what time of day. Record
-what you tried in `docs/active/` so the next attempt does not start over.
+questions: which machine, which browser, which account, what time of day. If the
+investigation must pause or span sessions, create or update `docs/active/` with
+what you tried so the next attempt does not start over.
 
 **The app will not run** → that is a different and larger problem. Handle it
 first and tell the user you are handling something else.
@@ -41,6 +42,11 @@ whether old data is kept or deleted, what the error message says. If the six
 items are touched, run `mkit:grill-me`.
 
 ## 4. Fix
+
+Keep a bounded diagnosis and fix in the current conversation. If the work spans
+sessions, requires coordination, or needs a recovery trail, create or reuse
+`docs/active/<task>.md` and fill the reproduction, completed work, remaining
+work, and acceptance steps.
 
 The smallest change that removes the bug. Do not tidy surrounding code, do not
 change anything unrelated.
@@ -59,8 +65,10 @@ No new script needed. They already ran this one once.
 
 ## 6. Close
 
-Once confirmed fixed, move the file to `docs/done/` with the reproduction steps
-recorded in it. If this bug returns later, that is exactly what is needed.
+Once confirmed fixed, move an existing active record to `docs/done/` with the
+reproduction steps recorded in it. A bounded fix does not need a durable task
+record. If this bug returns later, the completed record and Git history are the
+available trail.
 
 Only touch `spec.md` if the bug means a line currently marked `✅ working` was not
 actually working.
