@@ -42,7 +42,19 @@ must survive.
 `AGENTS.md` is what Codex and Pi read. `CLAUDE.md` only imports it, so the rules
 exist in exactly one place and cannot drift.
 
-## 4. Create `spec.md`
+## 4. Write the workflows for other agents
+
+Copy every `SKILL.md` from this plugin's own `skills/` directory into
+`.mkit/workflows/<name>.md` — you are reading one of those files right now, so
+its parent directory is where they live.
+
+Slash commands exist only in Claude Code. Codex and Pi reach the same workflows
+through the lookup table at the end of the `MKIT` block. Without this step that
+table points at nothing.
+
+Skip `init` itself; it is not a workflow.
+
+## 5. Create `spec.md`
 
 If missing, create it from `docs/templates/spec.md`. Ask one question to fill the
 first line:
@@ -51,7 +63,7 @@ first line:
 
 If `spec.md` already exists, leave it alone.
 
-## 5. Report
+## 6. Report
 
 Briefly, in plain language: installed, which commands now exist, which one to
 run first.

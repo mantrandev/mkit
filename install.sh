@@ -72,28 +72,27 @@ fi
 
 rm -rf "$TARGET/.mkit/workflows"
 mkdir -p "$TARGET/.mkit/workflows"
-mkdir -p "$TARGET/.claude/skills"
 count=0
 for dir in "$SRC/skills"/*/; do
   name="$(basename "$dir")"
+  [ "$name" = init ] && continue
   cp "$dir/SKILL.md" "$TARGET/.mkit/workflows/$name.md"
-  out="$TARGET/.claude/skills/mkit-$name"
-  mkdir -p "$out"
-  sed "s/^name: $name$/name: mkit-$name/" "$dir/SKILL.md" > "$out/SKILL.md"
   count=$((count + 1))
 done
-say "mkit: $count workflow vào .mkit/workflows (Codex, Pi, mọi agent)"
-say "mkit: $count lệnh vào .claude/skills (Claude Code)"
+say "mkit: $count workflow vào .mkit/workflows"
 
 say ""
-say "Xong. Dùng được ở cả ba agent:"
+say "Xong. Nói bằng tiếng thường với agent của bạn:"
 say ""
-say "  Claude Code   gõ /mkit-plan, /mkit-implement, /mkit-fix, /mkit-continue,"
-say "                /mkit-ha, /mkit-init"
+say "  'bàn về X'              bàn một việc, chưa sửa gì"
+say "  'làm cho tôi X'         làm thật"
+say "  'bị lỗi rồi'            sửa lỗi"
+say "  'hôm trước làm tới đâu' xem việc đang dở"
+say "  'không hiểu'            nói lại kiểu khác"
 say ""
-say "  Codex, Pi     nói bằng tiếng thường — 'bàn về X', 'làm cho tôi X',"
-say "                'bị lỗi rồi', 'hôm trước làm tới đâu'. Agent đọc AGENTS.md"
-say "                rồi tự tìm đúng workflow."
+say "Dùng Claude Code thì cài thêm plugin để có slash command:"
+say "  /plugin marketplace add mantrandev/MKit"
+say "  /plugin install mkit@mkit"
 say ""
 
 if [ "$IN_GIT" = no ]; then
