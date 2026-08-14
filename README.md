@@ -135,6 +135,40 @@ tốn câu hỏi nào.
 Nguyên tắc phân chia: agent tự quyết khi **sai thì phát hiện được và sửa rẻ**.
 Phải hỏi khi **sai thì bạn không phát hiện được**.
 
+## Những thứ bạn không nhìn thấy
+
+Bạn không đọc được code, nên có một loạt thứ hỏng mà bạn **không có cách nào
+phát hiện**. mkit bắt agent tự canh chúng:
+
+- **Viết ít nhất có thể.** Không thêm tính năng bạn không xin. Không dựng cấu
+  trúc phức tạp cho thứ dùng một lần. 200 dòng mà 50 dòng đủ thì viết lại.
+- **Chỉ đụng thứ buộc phải đụng.** Không "dọn dẹp" code xung quanh, không sửa
+  format, không đổi thứ đang chạy tốt. Mỗi dòng bị sửa phải truy ngược được về
+  yêu cầu của bạn.
+- **Không xoá, không reset, không force-push** trừ khi bạn bảo làm đúng thế.
+- **Thấy cách đơn giản hơn thì phải nói**, trước khi làm. Bạn không có ai khác
+  phản biện hộ.
+- **Cái gì chưa làm, chưa chạy, chưa thử thì phải khai ra.** Bạn không tự kiểm
+  được, nên im lặng sẽ bị hiểu là đã kiểm hết.
+
+## Đường lùi
+
+Bạn không cần biết git. Agent tự lưu mốc giúp bạn — trước mỗi lần dừng lại hỏi,
+và mỗi lần một việc xong.
+
+Muốn quay lại thì nói *"quay về lúc nãy"*. Bạn sẽ được hỏi kiểu này:
+
+```
+Quay về lúc nào?
+1. Trước khi tôi sửa nút Thanh toán — 10 phút trước
+2. Trước khi thêm đăng nhập Google — hôm qua
+```
+
+Không có mã băm, không có tên nhánh, không có thuật ngữ. Chọn số là xong.
+
+Agent **không bao giờ tự đẩy code đi đâu** — lưu mốc là việc của nó, còn gửi
+code ra ngoài là quyết định của bạn.
+
 ## Dựa trên
 
 - [`hoangnb24/repository-harness`](https://github.com/hoangnb24/repository-harness) — cổng thẩm quyền, phân loại công việc, chuẩn hoàn thành, cấu trúc `decision.md`
