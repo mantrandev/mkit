@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL="${MKIT_REPO:-https://github.com/mantrandev/MKit.git}"
+REPO_URL="${MKIT_REPO:-https://github.com/mantrandev/mkit.git}"
 REPO_BRANCH="${MKIT_BRANCH:-main}"
 TARGET="${1:-$PWD}"
 
@@ -24,7 +24,7 @@ trap 'rm -rf "$SRC"' EXIT
 
 say "mkit: đang tải…"
 git clone --depth 1 --branch "$REPO_BRANCH" --quiet "$REPO_URL" "$SRC/mkit" \
-  || die "không tải được $REPO_URL — repo còn private thì chạy: gh repo clone mantrandev/MKit"
+  || die "không tải được $REPO_URL — repo còn private thì chạy: gh repo clone mantrandev/mkit"
 
 SRC="$SRC/mkit"
 
@@ -91,7 +91,7 @@ say "  'hôm trước làm tới đâu' xem việc đang dở"
 say "  'không hiểu'            nói lại kiểu khác"
 say ""
 say "Dùng Claude Code thì cài thêm plugin để có slash command:"
-say "  /plugin marketplace add mantrandev/MKit"
+say "  /plugin marketplace add mantrandev/mkit"
 say "  /plugin install mkit@mkit"
 say ""
 

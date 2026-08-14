@@ -51,7 +51,7 @@ Người dùng vẫn là người quyết định. Chỉ có ngôn ngữ đổi.
 **Claude Code** — hai lệnh, không cần mở terminal:
 
 ```
-/plugin marketplace add mantrandev/MKit
+/plugin marketplace add mantrandev/mkit
 /plugin install mkit@mkit
 ```
 
@@ -62,7 +62,7 @@ cho Codex và Pi.
 <summary>Không dùng Claude Code — một lệnh trong terminal</summary>
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/mantrandev/MKit/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mantrandev/mkit/main/install.sh | bash
 ```
 
 Cài vào thư mục hiện tại; thêm đường dẫn phía sau để cài chỗ khác. Chạy lại chỉ
