@@ -7,7 +7,7 @@ Fork of `grilling` (Matt Pocock, MIT). Keeps the design tree and the rule that
 finding facts is your job while decisions are the user's. Differs in two ways,
 because this user cannot read code.
 
-Ask in Vietnamese.
+Use the user's language. Default to English when the user has not established one.
 
 ## Two rules you may not break
 
@@ -35,55 +35,56 @@ before asking.
 ## Question format
 
 ```
-❓ **Cần bạn chốt** — <question, one line, no jargon>
+❓ **Decision needed** — <question, one line, no jargon>
 
 <One short paragraph: why you are not allowed to decide this yourself.>
 
 **A.** <option>
-   → Được: <concrete benefit>
-   → Mất: <concrete tradeoff>
+   → Gain: <concrete benefit>
+   → Tradeoff: <concrete cost>
 
 **B.** <option>
-   → Được: <concrete benefit>
-   → Mất: <concrete tradeoff>
+   → Gain: <concrete benefit>
+   → Tradeoff: <concrete cost>
 
-➡️ **Tôi nghiêng về A** vì <reason, stated as consequence>.
+➡️ **I recommend A** because <reason, stated as a consequence>.
 
-Không hiểu chỗ nào thì gõ `/mkit:ha`.
+If any part is unclear, type `/mkit:ha`.
 ```
 
 Two or three options. Four is too many.
 
-"Được" and "Mất" must be things the user can picture: what a customer
+"Gain" and "Tradeoff" must be things the user can picture: what a customer
 experiences, how long it takes, how much it costs, whether it can be undone.
 Never "better performance" or "easier to maintain".
 
 ## Example
 
 ```
-❓ **Cần bạn chốt** — Chặn người bấm quá nhanh ở mức nào?
+❓ **Decision needed** — How aggressively should repeated clicks be blocked?
 
-Trang đăng ký đang bị bấm liên tục để tạo tài khoản rác. Chặn được, nhưng chặn
-chặt quá thì khách thật cũng bị chặn nhầm. Tôi không tự chọn mức này được.
+The registration page is being clicked repeatedly to create spam accounts.
+Blocking helps, but a strict limit can also block real customers. I cannot
+choose that tradeoff for you.
 
-**A.** Chặt tay — mỗi người 20 lần mỗi phút
-   → Được: gần như hết tài khoản rác
-   → Mất: khách thật bấm nhanh vào giờ cao điểm có thể bị chặn nhầm, phải đợi
-     1 phút mới thử lại được
+**A.** Strict — 20 attempts per person per minute
+   → Gain: almost all spam accounts are stopped
+   → Tradeoff: a real customer clicking quickly at peak time may be blocked and
+     must wait 1 minute
 
-**B.** Lỏng tay — mỗi người 100 lần mỗi phút
-   → Được: khách thật gần như không bao giờ bị chặn nhầm
-   → Mất: vẫn lọt tài khoản rác, mỗi ngày khoảng vài chục cái phải dọn tay
+**B.** Lenient — 100 attempts per person per minute
+   → Gain: real customers are almost never blocked by mistake
+   → Tradeoff: several dozen spam accounts may still need manual cleanup each day
 
-➡️ **Tôi nghiêng về A** vì tài khoản rác dọn tay rất tốn công, còn khách bị chặn
-nhầm chỉ cần đợi 1 phút và vẫn dùng được.
+➡️ **I recommend A** because manual spam cleanup is expensive, while a customer
+blocked by mistake can retry after 1 minute.
 
-Không hiểu chỗ nào thì gõ `/mkit:ha`.
+If any part is unclear, type `/mkit:ha`.
 ```
 
 ## After the user decides
 
-First append the answer and its reason to `Quyết định trong việc này` in the
+First append the answer and its reason to `Task decisions` in the
 current `docs/active/<task>.md`.
 
 Then decide whether to promote it into `docs/decisions/`. Promotion requires
@@ -101,20 +102,20 @@ Answer these checks yourself; do not ask the user to classify their answer.
 
 **Promote** → create a new file in `docs/decisions/` from
 `docs/templates/decision.md`, numbered one above the highest existing. Fill both
-sections: `Quyết định` in plain Vietnamese, `Ràng buộc kỹ thuật` precise enough
+sections: `Decision` in plain language and `Technical constraints` precise enough
 to execute. Keep the active-plan entry and link it to the promoted decision. If
-it replaces an older decision, set that file's status to `Superseded bởi NNNN`
+it replaces an older decision, set that file's status to `Superseded by NNNN`
 — do not delete it, do not edit its content, do not move it.
 
 **Keep local** → make no file in `docs/decisions/`.
 
 Then report exactly one line:
 
-> Đã ghi vào việc đang bàn và thành luật chung — mọi việc sau sẽ theo.
+> Recorded in this task and promoted to a shared rule for future work.
 
 or
 
-> Đã ghi vào việc đang bàn — không tạo luật chung.
+> Recorded in this task only; no shared rule was created.
 
 That line is the user's chance to correct the classification.
 
@@ -131,17 +132,17 @@ In order of preference:
 2. **If you cannot build variants, ask a comparison, never an open question.**
 
    ```
-   ✗ Bạn muốn màu gì?
-   ✓ Xanh giống nút Lưu đang có, hay đậm hơn?
+   ✗ What color do you want?
+   ✓ The same blue as the current Save button, or darker?
 
-   ✗ Bạn muốn bố cục thế nào?
-   ✓ Danh sách dọc như trang Đơn hàng, hay lưới ô vuông như trang Sản phẩm?
+   ✗ What layout do you want?
+   ✓ A vertical list like Orders, or a square grid like Products?
    ```
 
 3. **Still unclear — ask for something to copy.** Any page, app, or screenshot:
-   *"cho tôi xem một chỗ bạn thấy đẹp, tôi làm theo"*.
+   *"Show me something you like and I will follow it."*
 
-Never build one version and ask "được chưa". That is still guessing, just with
+Never build one version and ask "Is this okay?" That is still guessing, just with
 a question attached.
 
 ## When to stop
@@ -159,13 +160,13 @@ question makes the user read the next one less carefully.
 
 Past five questions, keep asking, but tell them where they are:
 
-> Việc này lớn hơn vẻ ngoài của nó — còn khoảng 3 chỗ nữa cần bạn chốt. Muốn làm
-> gọn phần đầu trước rồi tính tiếp cũng được.
+> This task is larger than it first appeared. About 3 more choices remain. We
+> can finish the first part before deciding the rest.
 
 ## When the user lacks the authority
 
 Some questions are genuinely not theirs — pricing, refund policy, legal terms.
 Do not force a choice. Say so:
 
-> Câu này cần người quyết định về <chuyện gì>. Bạn hỏi giúp rồi quay lại đây, hoặc
-> tôi làm phần khác trước và để trống chỗ này.
+> This question belongs to the person responsible for <area>. Ask them and come
+> back, or I can work on another part and leave this open.

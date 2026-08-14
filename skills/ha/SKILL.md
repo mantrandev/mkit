@@ -5,7 +5,7 @@ description: Say the last thing again, differently. Use when the user did not un
 
 The last message did not land. Re-pitch it — do not repeat it.
 
-Answer in Vietnamese.
+Use the user's language. Default to English when the user has not established one.
 
 ## Do not
 

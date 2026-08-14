@@ -9,7 +9,7 @@ The decision gate runs exactly as it does in `/mkit:plan`. This command differs
 in **where it stops**, not in how safe it is. Choosing `implement` over `plan`
 does not grant permission to skip any question.
 
-Talk to the user in Vietnamese.
+Use the user's language. Default to English when the user has not established one.
 
 ## 1. Clarify the request
 
@@ -35,7 +35,7 @@ If nothing is touched, ask nothing — go straight to step 3.
 
 ## 3. Build
 
-Update `Xong gì` in `docs/active/<task>.md` as you go. The user may close their
+Update `Completed` in `docs/active/<task>.md` as you go. The user may close their
 laptop at any moment; that file is the only thing that lets them come back.
 
 **Stop mid-work** on any of the five signals in the `MKIT` block. When you stop:
@@ -61,9 +61,9 @@ missing.
 
 Once the user confirms they see it working:
 
-- fill `Cách tự kiểm` in the `docs/active/` file
+- fill `Acceptance` in the `docs/active/` file
 - move the file to `docs/done/`
-- change the matching `spec.md` line to `✅ chạy` with today's date
+- change the matching `spec.md` line to `✅ working` with today's date
 
 If the user says it is not right, go back to **step 1**, not step 3. Most of the
 time the request was understood wrongly, not implemented wrongly.

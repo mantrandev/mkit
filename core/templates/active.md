@@ -1,33 +1,33 @@
-# <Tên việc>
+# <Task name>
 
-Bắt đầu: YYYY-MM-DD
-Liên quan `spec.md`: <nhóm tính năng · dòng nào>
+Started: YYYY-MM-DD
+Related `spec.md` entry: <feature group · line>
 
-## Muốn gì
+## Desired outcome
 
-<Viết lại mong muốn bằng đúng lời người dùng. Không dịch sang tiếng kỹ thuật.
-Người dùng phải đọc dòng này và nói được "đúng rồi" hoặc "không phải vậy".>
+<Restate the request in the user's own words. Do not translate it into technical
+language. The user must be able to say "that is right" or "that is not what I mean".>
 
-## Xong gì
+## Completed
 
-- [x] <Bước đã xong> · YYYY-MM-DD
+- [x] <Completed step> · YYYY-MM-DD
 
-## Còn gì
+## Remaining
 
-- [ ] <Bước còn lại>
+- [ ] <Remaining step>
 
-## Cách tự kiểm
+## Acceptance
 
-<Kịch bản thao tác người dùng tự bấm được. Điền khi có thứ chạy được.>
+<Steps the user can perform themselves. Fill this when working behavior exists.>
 
-## Quyết định trong việc này
+## Task decisions
 
-- YYYY-MM-DD: <Câu trả lời đã chốt trong lúc bàn việc này, kèm lý do.>
+- YYYY-MM-DD: <Choice settled while discussing this task, with its reason.>
 
-Mọi câu trả lời bắt đầu ở đây. Chỉ lựa chọn lâu dài mà các việc sau phải tuân
-theo mới được ghi thêm vào `docs/decisions/`.
+Every answer starts here. Add a separate file in `docs/decisions/` only for a
+lasting choice that future work must inherit.
 
-## Ghi chú kỹ thuật
+## Technical notes
 
-<Chỉ agent đọc. Người dùng được phép bỏ qua toàn bộ mục này. Chỉ thêm khi việc
-đủ phức tạp để cần — việc nhỏ thì bỏ trống hoặc xoá mục này đi.>
+<Agent-only details. The user may skip this section. Include it only when the
+task is complex enough to need it; leave it empty or remove it for small work.>

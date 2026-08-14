@@ -3,8 +3,8 @@
 <!-- MKIT:BEGIN -->
 ## mkit
 
-Claude Code không tự nạp `AGENTS.md`. Import nguồn hướng dẫn duy nhất của dự án.
-Giữ dòng `@` trần, không bọc backtick, nếu không import sẽ chết.
+Claude Code does not load `AGENTS.md` automatically. Import the project's only
+instruction source. Keep the raw `@` line without backticks or the import will fail.
 
 @AGENTS.md
 <!-- MKIT:END -->

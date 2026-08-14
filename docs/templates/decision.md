@@ -1,29 +1,29 @@
-# NNNN <Tên quyết định>
+# NNNN <Decision title>
 
-Ngày: YYYY-MM-DD
+Date: YYYY-MM-DD
 
-## Trạng thái
+## Status
 
-Accepted | Superseded bởi NNNN | Rejected
+Accepted | Superseded by NNNN | Rejected
 
-## Vì sao phải quyết
+## Context
 
-<Chuyện gì buộc phải dừng lại hỏi. Viết bằng tiếng người.>
+<What forced the work to stop for a decision? Use plain language.>
 
-## Quyết định
+## Decision
 
-<Người dùng đã chọn gì. Viết bằng tiếng người, nêu hậu quả. Đây là bản có thẩm
-quyền — nếu mục dưới lệch với mục này, mục này thắng.>
+<What the user chose. Use plain language and state the consequences. This is the
+authoritative wording; if the section below conflicts, this section wins.>
 
-## Ràng buộc kỹ thuật
+## Technical constraints
 
-<Cùng quyết định trên, viết chính xác để agent thi hành. Người dùng không cần
-đọc mục này.>
+<Express the same decision precisely enough for an agent to execute. The user
+does not need to read this section.>
 
-## Đã cân nhắc gì khác
+## Alternatives considered
 
-1. <Lựa chọn khác> — <được gì, mất gì>
+1. <Alternative> — <gain and tradeoff>
 
-## Đánh đổi
+## Tradeoffs
 
-<Chấp nhận mất gì khi chọn phương án này. Viết bằng tiếng người.>
+<What is knowingly sacrificed by this choice? Use plain language.>

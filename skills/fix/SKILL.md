@@ -10,13 +10,13 @@ The one rule that cannot be broken:
 Fixing without seeing the bug is guessing. The user cannot tell that you guessed,
 so they will believe it is done.
 
-Talk to the user in Vietnamese.
+Use the user's language. Default to English when the user has not established one.
 
 ## 1. Get the steps
 
 Ask what they do to make it break. Ask in actions, not in technical description:
 
-> Bạn bấm những gì để nó hỏng? Kể tôi nghe từng bước, kể cả bước nhỏ nhất.
+> What do you click before it breaks? List every step, including the small ones.
 
 If the steps are incomplete, keep asking until you have a runnable sequence.
 Never fill the gaps by guessing.
@@ -52,8 +52,8 @@ change outside the scope is a risk invisible to them.
 
 Hand back **the exact steps from step 1** and say what must happen now:
 
-> Làm lại đúng các bước lúc nãy — mở giỏ hàng, bấm Thanh toán, chọn Momo. Lần
-> này phải sang được trang thanh toán thay vì đứng im.
+> Repeat the same steps: open the cart, click Checkout, and choose Momo. This
+> time the payment page must open instead of staying stuck.
 
 No new script needed. They already ran this one once.
 
@@ -62,5 +62,5 @@ No new script needed. They already ran this one once.
 Once confirmed fixed, move the file to `docs/done/` with the reproduction steps
 recorded in it. If this bug returns later, that is exactly what is needed.
 
-Only touch `spec.md` if the bug means a line currently marked `✅ chạy` was not
+Only touch `spec.md` if the bug means a line currently marked `✅ working` was not
 actually working.

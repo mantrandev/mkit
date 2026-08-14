@@ -7,7 +7,7 @@ Talk only. When this skill ends, **no code file has changed**.
 
 This is the user's safe command for exploring. Keep that promise exactly.
 
-Talk to the user in Vietnamese.
+Use the user's language. Default to English when the user has not established one.
 
 ## 1. Clarify the request
 
@@ -27,8 +27,8 @@ unclear thing is visual*.
 ## 2. Start the active plan
 
 Create `docs/active/<task-name>.md` from `docs/templates/active.md`. Fill
-`Muốn gì`, `Còn gì`, and the acceptance script in `Cách tự kiểm`. Leave
-`Xong gì` empty.
+`Desired outcome`, `Remaining`, and the acceptance script in `Acceptance`. Leave
+`Completed` empty.
 
 This file must exist before the first decision question. It is the default home
 for every answer given while planning.
@@ -46,7 +46,7 @@ decides whether a lasting choice also needs a separate decision record.
 
 Update the active plan with anything settled by the decision gate.
 
-Add the matching line to `spec.md` as `⬜ chưa làm`, or `⏳ đang làm` with a link
+Add the matching line to `spec.md` as `⬜ not started`, or `⏳ in progress` with a link
 to the file if the user says they want it built now.
 
 ## 5. Stop

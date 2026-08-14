@@ -1,7 +1,7 @@
 {
   "name": "mkit",
   "version": "0.1.0+codex.20260814095715",
-  "description": "Bộ kit harness workflow AI agent cho người không đọc được code. Chặn agent tự bịa chính sách, hỏi bằng ngôn ngữ hậu quả, chứng minh bằng thao tác tự bấm được.",
+  "description": "An AI-agent harness workflow for people who cannot read code. It prevents agents from inventing policy, asks through concrete consequences, and proves results with steps the user can perform.",
   "author": {
     "name": "mantrandev",
     "url": "https://github.com/mantrandev"
@@ -14,22 +14,22 @@
     "vibe-coding",
     "authority-gate",
     "grilling",
-    "vietnamese"
+    "plain-language"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "mkit",
-    "shortDescription": "Harness workflow cho người không đọc được code",
-    "longDescription": "Chặn agent tự bịa chính sách, hỏi bằng ngôn ngữ hậu quả và chứng minh bằng thao tác người dùng tự làm được.",
+    "shortDescription": "Harness workflow for people who cannot read code",
+    "longDescription": "Prevents agents from inventing policy, asks through concrete consequences, and proves results with steps the user can perform.",
     "developerName": "mantrandev",
     "category": "Productivity",
     "capabilities": [
       "Write"
     ],
     "defaultPrompt": [
-      "Bàn về một việc trước khi sửa code.",
-      "Làm một tính năng tới khi tôi tự thử được.",
-      "Sửa lỗi này và chỉ cho tôi cách tự kiểm tra."
+      "Plan a change before editing code.",
+      "Build a feature until I can test it myself.",
+      "Fix this bug and show me how to verify it."
     ]
   }
 }

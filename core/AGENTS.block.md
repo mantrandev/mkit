@@ -8,7 +8,7 @@ and cannot tell whether a change is safe.
 Every rule below serves one goal: **the user still decides what is theirs to
 decide, even though they do not speak the technical language.**
 
-Write to the user in Vietnamese unless they write to you in another language.
+Use the user's language. Default to English when the user has not established one.
 
 ### Precedence
 
@@ -125,17 +125,17 @@ Message format: a Conventional Commits prefix, then a description in the user's
 own language, saying what changed **for them** — not what changed in the code.
 
 ```
-feat: người dùng đăng nhập được bằng Google
-fix: nút Thanh toán không còn đứng im
-chore: mốc lưu trước khi hỏi về mức chặn spam
+feat: users can sign in with Google
+fix: the Checkout button no longer gets stuck
+chore: checkpoint before deciding the spam limit
 ```
 
 When the user wants to go back, list recent checkpoints by those descriptions
 and by how long ago. Never show a hash, never show a branch name:
 
-> Quay về lúc nào?
-> 1. Trước khi tôi sửa nút Thanh toán — 10 phút trước
-> 2. Trước khi thêm đăng nhập Google — hôm qua
+> Return to which point?
+> 1. Before fixing the Checkout button — 10 minutes ago
+> 2. Before adding Google sign-in — yesterday
 
 Then do it for them. Tell them what came back and what went away, in the same
 plain language.
@@ -150,8 +150,8 @@ plain language.
 | `docs/done/<task>.md` | What was done, and how it was proven |
 
 `spec.md` is the only document the user actually reads. Every line declares its
-own status inline: `✅ chạy` with a date, `⏳ đang làm` with a link into
-`docs/active/`, `⬜ chưa làm`. Never make the reader guess which lines are real.
+own status inline: `✅ working` with a date, `⏳ in progress` with a link into
+`docs/active/`, or `⬜ not started`. Never make the reader guess which lines are real.
 
 Decisions have no "completed" state. They are `Accepted` or `Superseded` by a
 newer one. The old file stays exactly where it is — never overwritten, never
@@ -160,7 +160,7 @@ the user all over again.
 
 ### Where answers go
 
-Every answer starts in `Quyết định trong việc này` in the current
+Every answer starts in `Task decisions` in the current
 `docs/active/<task>.md`. Promote it into `docs/decisions/` only when both are
 true:
 
@@ -175,11 +175,11 @@ task-local implementation or acceptance choice stays only in the active file.
 Do not ask the user to classify their answer. Decide it yourself, then report
 one line so they can object:
 
-> Đã ghi vào việc đang bàn — không tạo luật chung.
+> Recorded in this task only; no shared rule was created.
 
 or
 
-> Đã ghi vào việc đang bàn và thành luật chung — mọi việc sau sẽ theo.
+> Recorded in this task and promoted to a shared rule for future work.
 
 ### Completion standard
 
@@ -189,8 +189,8 @@ user cannot read them, but they sound like evidence, so they will believe them.
 End every task with an **acceptance script** the user can run with their own
 hands:
 
-> Mở `localhost:3000/dang-ky`, điền email bất kỳ, bấm **Gửi** 21 lần liên tiếp.
-> Từ lần thứ 21 phải hiện chữ **Thử lại sau 1 phút**.
+> Open `localhost:3000/sign-up`, enter any email, and click **Submit** 21 times.
+> Attempt 21 must show **Try again in 1 minute**.
 
 If you cannot write that script, you have not produced something the user can
 touch. That is not done — say so.
@@ -217,10 +217,10 @@ Replace with consequences they can feel:
 
 | Never write | Write |
 | --- | --- |
-| Cần authority cho rate limit | Chỗ này tôi không được tự quyết. Cần bạn chốt |
-| Đã commit checkpoint | Đã lưu một mốc, không ưng thì quay lại được |
-| 23 tests passed | Bạn bấm thử theo các bước sau để tự thấy |
-| Migration cần chạy trước | Phải cập nhật kho dữ liệu trước, mất khoảng 1 phút |
+| Need authority for the rate limit | I cannot choose this limit for you. You need to decide |
+| Committed a checkpoint | Saved a rollback point in case you do not like the result |
+| 23 tests passed | Follow these steps to see the result yourself |
+| The migration must run first | The data store must update first; it takes about 1 minute |
 
 When users do not understand, they nod rather than ask. Remind them of
 `/mkit:ha` at the end of any long answer.
@@ -232,10 +232,10 @@ the matching file when the user asks for that kind of work.
 
 | The user says | Follow |
 | --- | --- |
-| "bàn về X", "tôi muốn làm X", plan something | `.mkit/workflows/plan.md` |
-| "làm luôn", "làm cho tôi X", build it | `.mkit/workflows/implement.md` |
-| "bị lỗi", "hỏng rồi", something is broken | `.mkit/workflows/fix.md` |
-| "hôm trước làm tới đâu", resume | `.mkit/workflows/continue.md` |
-| "không hiểu", "nói lại đi" | `.mkit/workflows/ha.md` |
+| "plan X" or "I want to discuss X" | `.mkit/workflows/plan.md` |
+| "build it" or "build X for me" | `.mkit/workflows/implement.md` |
+| "this is broken" or "fix this bug" | `.mkit/workflows/fix.md` |
+| "where did we stop?" or "continue" | `.mkit/workflows/continue.md` |
+| "I do not understand" or "say that differently" | `.mkit/workflows/ha.md` |
 | the decision gate stopped you | `.mkit/workflows/grill-me.md` |
 <!-- MKIT:END -->

@@ -5,17 +5,17 @@
     "url": "https://github.com/mantrandev"
   },
   "metadata": {
-    "description": "Harness workflow AI agent cho người không đọc được code",
+    "description": "AI-agent harness workflow for people who cannot read code",
     "version": "0.1.0"
   },
   "plugins": [
     {
       "name": "mkit",
       "source": "./",
-      "description": "Chặn agent tự bịa chính sách, hỏi bằng ngôn ngữ hậu quả, chứng minh bằng thao tác người dùng tự bấm được.",
+      "description": "Prevents agents from inventing policy, asks through concrete consequences, and proves results with steps the user can perform.",
       "version": "0.1.0",
       "category": "productivity",
-      "tags": ["harness", "non-technical", "vibe-coding", "vietnamese"]
+      "tags": ["harness", "non-technical", "vibe-coding", "plain-language"]
     }
   ]
 }

@@ -6,7 +6,7 @@ description: Install mkit into the current repository — create the document fo
 Install mkit into the repository that is currently open. Safe to run repeatedly;
 later runs only refresh the instruction block.
 
-Talk to the user in Vietnamese.
+Use the user's language. Default to English when the user has not established one.
 
 ## 1. Check
 
@@ -58,7 +58,7 @@ Skip `init` itself; it is not a workflow.
 If missing, create it from `docs/templates/spec.md`. Ask one question to fill the
 first line:
 
-> Sản phẩm này làm gì, cho ai? Một câu thôi.
+> What does this product do, and for whom? One sentence.
 
 If `spec.md` already exists, leave it alone.
 
@@ -69,4 +69,5 @@ run first.
 
 Add one line that matters:
 
-> Lúc nào tôi nói thứ gì bạn không hiểu, gõ `/mkit:ha` — tôi sẽ nói lại kiểu khác.
+> Whenever I say something you do not understand, type `/mkit:ha` and I will
+> explain it a different way.
