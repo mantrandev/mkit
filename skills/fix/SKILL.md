@@ -48,6 +48,12 @@ sessions, requires coordination, or needs a recovery trail, create or reuse
 `docs/active/<task>.md` and fill the reproduction, completed work, remaining
 work, and acceptance steps.
 
+Before editing product code, read explicit repository-local architecture rules
+and `docs/architecture.md`. If neither defines the changed path, inspect source,
+tests, and build configuration to identify the current owner and dependency
+direction. Fix the bug through that owner and an existing seam; do not bypass a
+boundary to make the reproduction pass.
+
 The smallest change that removes the bug. Do not tidy surrounding code, do not
 change anything unrelated.
 
@@ -55,6 +61,10 @@ The user cannot read a diff, so they cannot see what else you touched. Every
 change outside the scope is a risk invisible to them.
 
 ## 5. Verify
+
+Run the repository's applicable format, static analysis, type, test, and
+architecture checks for the changed path. If no automated architecture check
+exists, inspect every changed cross-boundary dependency and report that gap.
 
 Hand back **the exact steps from step 1** and say what must happen now:
 

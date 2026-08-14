@@ -26,10 +26,11 @@ and filename of every accepted historical decision.
 - [x] Generated Codex cachebuster `0.1.0+codex.20260814101904` and reran validation · 2026-08-14
 - [x] Forward-tested English and Vietnamese planning flows in isolated repositories · 2026-08-14
 - [x] Generated Codex cachebuster `0.1.0+codex.20260814105110` after the adaptive-record workflow update · 2026-08-14
+- [x] Generated Codex cachebuster `0.1.0+codex.20260814163303` after the engineering-integrity workflow update · 2026-08-14
 
 ## Remaining
 
-- [ ] Upgrade and reinstall `mkit@mkit` at `0.1.0+codex.20260814105110`
+- [ ] Upgrade and reinstall `mkit@mkit` at `0.1.0+codex.20260814163303`
 - [ ] Start a fresh Codex thread and confirm the reinstalled plugin defaults to English
 
 ## Acceptance

@@ -111,7 +111,7 @@ to `.mkit/workflows/`.
 
 | Command | Purpose |
 | --- | --- |
-| `/mkit:init` | Create the document structure and ask what the product does |
+| `/mkit:init` | Install the document structure and observe an existing codebase without redesigning it |
 | `/mkit:plan` | Discuss and settle a task without editing code |
 | `/mkit:implement` | Build until the user can test the result themselves |
 | `/mkit:fix` | Reproduce a bug first, then fix it |
@@ -124,11 +124,12 @@ matching workflow.
 `/mkit:ha` is the most important command. A user who does not understand often
 agrees instead of asking. This command makes "I do not understand" easy to say.
 
-## Four documents
+## Five documents
 
 | File | Answers |
 | --- | --- |
 | `spec.md` | What the product can do, with status on every line |
+| `docs/architecture.md` | What owns each responsibility and which dependencies are allowed now |
 | `docs/decisions/` | Lasting rules that future work must inherit |
 | `docs/active/` | Durable work in progress, how far it got, and what remains |
 | `docs/done/` | What was completed and how it was verified |
@@ -142,6 +143,10 @@ behavior or acceptance. Create a separate file in `docs/decisions/` only when
 future work must inherit a consequential choice and its reason. One answer may
 update both: the specification says what is true now, while the decision
 preserves why it was chosen.
+
+Architecture follows the same separation. `docs/architecture.md` describes the
+boundaries and dependency direction that exist now. A decision record preserves
+why a consequential architectural choice must bind future work.
 
 `spec.md` is the only document the target user must read. Each line declares its
 own status:
@@ -182,6 +187,29 @@ mkit makes the agent responsible for them:
 - **Do not delete, reset, or force-push** unless the user requests that exact operation.
 - **Present a simpler path before building** when it is faster, safer, or easier to change.
 - **Disclose every untested or unfinished part.** Silence sounds like complete verification.
+- **Preserve the project's architecture.** Put behavior in its current owner,
+  keep dependency direction intact, avoid circular dependencies, and run the
+  checks that apply to the changed path.
+
+## Architecture without architecture astronautics
+
+mkit does not make every repository use Clean Architecture. It treats Clean
+Architecture as one project profile among many and follows it only where the
+repository already uses it or deliberately adopts it.
+
+`mkit:init` has two paths:
+
+- **Existing codebase:** read the code, tests, build files, and local rules. Keep
+  an existing architecture document, or create a fully populated
+  `docs/architecture.md` that describes the code as it is. Initialization does
+  not reorganize source code.
+- **Empty repository:** install mkit without creating layers or an empty
+  architecture record. The first implementation uses the smallest sufficient
+  structure and records boundaries only after they exist.
+
+Implementation and bug-fix workflows read that architecture before editing
+product code. When no automated boundary check exists, the agent must inspect
+every changed cross-boundary dependency and disclose that gap.
 
 ## Rollback
 

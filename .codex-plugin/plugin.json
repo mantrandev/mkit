@@ -1,7 +1,7 @@
 {
   "name": "mkit",
-  "version": "0.1.0+codex.20260814105110",
-  "description": "An AI-agent harness workflow for people who cannot read code. It prevents agents from inventing policy, asks through concrete consequences, and proves results with steps the user can perform.",
+  "version": "0.1.0+codex.20260814163303",
+  "description": "An AI-agent harness workflow for people who cannot read code. It prevents invented policy, preserves each repository's architecture, and proves results with steps the user can perform.",
   "author": {
     "name": "mantrandev",
     "url": "https://github.com/mantrandev"
@@ -14,13 +14,14 @@
     "vibe-coding",
     "authority-gate",
     "grilling",
-    "plain-language"
+    "plain-language",
+    "architecture"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "mkit",
     "shortDescription": "Harness workflow for people who cannot read code",
-    "longDescription": "Prevents agents from inventing policy, asks through concrete consequences, and proves results with steps the user can perform.",
+    "longDescription": "Prevents invented policy, preserves each repository's architecture without imposing one design, and proves results with steps the user can perform.",
     "developerName": "mantrandev",
     "category": "Productivity",
     "capabilities": [

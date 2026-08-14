@@ -34,7 +34,18 @@ any file or invoking `grill-me`.
 The gate check is complete when every touched item is either covered by an
 existing decision or listed as an open question.
 
-## 3. Resolve open choices
+## 3. Read architecture context
+
+Read explicit repository-local architecture rules and `docs/architecture.md`
+when the plan touches modules, ownership, dependencies, or cross-boundary flows.
+If no document exists, inspect the current source, tests, and build configuration
+without editing product code.
+
+Do not treat Clean Architecture or any other profile as the default. Preserve
+the project's current shape unless the user deliberately settles a change whose
+consequences matter to them.
+
+## 4. Resolve open choices
 
 For every unresolved visual comparison, run `mkit:grill-me`, section *When the
 unclear thing is visual*.
@@ -43,7 +54,7 @@ For each open gate question, run `mkit:grill-me`, one
 question at a time. `grill-me` routes each settled answer to `spec.md`, a lasting
 decision, an existing active record, or the current conversation.
 
-## 4. Choose the work record
+## 5. Choose the work record
 
 Keep a bounded plan in the current conversation when it can finish here without
 coordination or a recovery trail.
@@ -55,7 +66,7 @@ requires coordination, or needs recovery. Fill every template placeholder.
 The work-shape choice is complete when an active record exists for durable work
 and no active record was created for bounded work.
 
-## 5. Record the settled outcome
+## 6. Record the settled outcome
 
 Update `spec.md` with settled product behavior and acceptance. Add or update the
 matching feature line as `⬜ not started`; use `⏳ in progress` with an active
@@ -67,7 +78,12 @@ Create a decision only for a consequential choice future work must inherit. If
 an active planning record exists, keep it current while planning remains open;
 move it to `docs/done/` when planning is complete.
 
-## 6. Stop
+Do not update `docs/architecture.md` with a planned future structure. It
+describes what exists now. Record lasting architectural rationale in a decision,
+then let `mkit:implement` update the current architecture after the structure
+actually exists.
+
+## 7. Stop
 
 Report four things, briefly, in plain language:
 

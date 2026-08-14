@@ -1,7 +1,7 @@
 {
   "name": "mkit",
-  "version": "0.1.1",
-  "description": "An AI-agent harness workflow for people who cannot read code. It prevents agents from inventing policy, asks through concrete consequences, and proves results with steps the user can perform.",
+  "version": "0.1.2",
+  "description": "An AI-agent harness workflow for people who cannot read code. It prevents invented policy, preserves each repository's architecture, and proves results with steps the user can perform.",
   "author": {
     "name": "mantrandev"
   },
@@ -13,7 +13,8 @@
     "vibe-coding",
     "authority-gate",
     "grilling",
-    "plain-language"
+    "plain-language",
+    "architecture"
   ],
   "skills": [
     "./skills/init",

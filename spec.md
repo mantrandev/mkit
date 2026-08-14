@@ -13,6 +13,7 @@ verified with executable or observable evidence; written code alone does not cou
 - [x] Completion requires steps the user can perform; test counts are not the user-facing evidence — ✅ working · 2026-08-14
 - [x] Restraint rules — write the minimum and touch only what the request requires — ✅ working · 2026-08-14
 - [x] Checkpoint rules — commit automatically at three moments and never push without a user request — ✅ working · 2026-08-14
+- [x] Engineering integrity gate — preserve project ownership and dependency direction without imposing one architecture — ✅ working · 2026-08-14
 - [ ] English-default distributed surfaces and new records — ⏳ in progress · [English default](docs/active/default-english.md)
 
 ## Commands
@@ -23,7 +24,7 @@ verified with executable or observable evidence; written code alone does not cou
 - [x] `continue` — recover unfinished work — ✅ working · 2026-08-14
 - [x] `grill-me` — ask one question at a time, show each option's consequences, and route the settled answer by meaning — ✅ working · 2026-08-14
 - [x] `ha` — explain the last point a different way — ✅ working · 2026-08-14
-- [x] `init` — install mkit into a target repository — ✅ working · 2026-08-14
+- [x] `init` — preserve an existing codebase's architecture and leave an empty repository unstructured — ✅ working · 2026-08-14
 
 ## Documents created in a target repository
 
@@ -31,6 +32,7 @@ verified with executable or observable evidence; written code alone does not cou
 - [x] `docs/decisions/` — lasting rules with `Superseded` history — ✅ working · 2026-08-14
 - [x] `docs/active/` — only durable work in progress that must survive the current conversation — ✅ working · 2026-08-14
 - [x] `docs/done/` — completed or cancelled durable work — ✅ working · 2026-08-14
+- [x] `docs/architecture.md` — current project boundaries, dependency direction, flows, and verification — ✅ working · 2026-08-14
 
 ## Installation
 

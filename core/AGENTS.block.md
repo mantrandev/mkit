@@ -66,6 +66,37 @@ If there is a simpler way to get what they want, say so before building. Say it
 in consequences: faster, fewer things that can break, easier to change later.
 They have nobody else to push back for them.
 
+### Engineering integrity
+
+After the decision gate and before editing product code, identify the project's
+current architecture in this order:
+
+1. explicit repository-local architecture rules
+2. `docs/architecture.md`
+3. ownership and dependency direction observed in source, tests, and build files
+
+Preserve the architecture that exists. Do not impose Clean Architecture, a
+layered design, or any other profile unless the repository already uses it or a
+lasting project decision deliberately adopts it. In an empty repository, use
+the smallest structure sufficient for the first real feature; do not create
+placeholder layers.
+
+Put behavior in its owning module. Preserve documented dependency direction,
+use an existing seam before creating a new one, avoid circular dependencies,
+keep dependencies explicit at established boundaries, and keep each business
+rule in one owner. Keep names, functions, and modules focused enough that their
+responsibility is clear without an explanatory abstraction.
+
+Update `docs/architecture.md` when work establishes or changes a durable module,
+owner, dependency rule, or cross-boundary flow. Create a decision as well only
+when future work must inherit a consequential architectural choice and its
+reason.
+
+Before completion, run the repository's format, static analysis, type, test,
+and architecture checks that apply to the changed path. If no automated
+architecture check exists, inspect every changed cross-boundary dependency and
+state that validation gap.
+
 ### Decision gate
 
 Before editing any file, check the request against these six:
@@ -142,11 +173,12 @@ and by how long ago. Never show a hash, never show a branch name:
 Then do it for them. Tell them what came back and what went away, in the same
 plain language.
 
-### Four documents
+### Five documents
 
 | File | Answers |
 | --- | --- |
 | `spec.md` | What the product does — full list, status per line |
+| `docs/architecture.md` | Current modules, ownership, dependency direction, flows, and checks |
 | `docs/decisions/NNNN-*.md` | Rules that bind every future task |
 | `docs/active/<task>.md` | Durable work in progress, how far, what is left |
 | `docs/done/<task>.md` | What was done, and how it was proven |
@@ -160,6 +192,12 @@ newer one. The decision body is immutable; only its status may change when a
 newer decision supersedes it. Never translate, delete, or move an old decision.
 Changing its record means the next session cannot trust what was originally
 decided.
+
+`docs/architecture.md` describes the structure that is true now. A decision
+record preserves the reason for a consequential architecture choice. Update the
+current description when the structure changes without rewriting its history.
+The file is required once product source exists and intentionally absent in an
+empty repository.
 
 ### Where answers go
 

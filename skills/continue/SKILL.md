@@ -36,7 +36,8 @@ No tasks: say so, and point at `/mkit:plan` or `/mkit:implement`.
 ## 3. Resume
 
 Once they pick, read that task's whole file including
-`Task decisions`, then continue from step 3 of `/mkit:implement`.
+`Task decisions`, then continue from step 3 of `/mkit:implement`. This reloads
+the current architecture before product code changes resume.
 
 Do not re-ask anything already recorded in the file. That is why it exists.
 

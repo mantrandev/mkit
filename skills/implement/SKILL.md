@@ -33,7 +33,28 @@ decision, run `mkit:grill-me`.
 
 If nothing is touched, ask nothing — go straight to step 3.
 
-## 3. Choose the work record
+## 3. Read the architecture
+
+Read explicit repository-local architecture rules first, then
+`docs/architecture.md` when it exists. If neither defines the changed path,
+inspect source, tests, and build configuration to identify the current owner and
+dependency direction before editing product code.
+
+Preserve the architecture that exists. Do not introduce Clean Architecture or
+another profile unless the repository already uses it or a lasting decision
+adopts it.
+
+For an empty repository, choose the smallest structure sufficient for the first
+real feature. Do not create placeholder layers or an unfilled architecture
+record. Once the implementation creates a real module, owner, dependency rule,
+or cross-boundary flow, create a fully populated `docs/architecture.md` from its
+template.
+
+Treat routine file and module placement as an implementation detail. Run
+`mkit:grill-me` only when viable architectures have noticeably different user
+consequences or a lasting project decision is genuinely open.
+
+## 4. Choose the work record
 
 Keep bounded work in the current conversation when it can finish in this
 session without coordination or a recovery trail.
@@ -45,9 +66,15 @@ Mark the matching `spec.md` line `⏳ in progress` with a link to that record.
 If bounded work becomes durable before you stop, create the active record then
 with everything completed, remaining, and needed to resume.
 
-## 4. Build
+## 5. Build
 
 When an active record exists, update `Completed` as you go.
+
+Put behavior in the module that owns it. Preserve dependency direction, use an
+existing seam before creating a new one, avoid circular dependencies, keep
+dependencies explicit at established boundaries, and keep each business rule in
+one owner. Update `docs/architecture.md` when the work establishes or changes a
+durable boundary or flow.
 
 **Stop mid-work** on any of the five signals in the `MKIT` block. When you stop:
 
@@ -59,7 +86,11 @@ When an active record exists, update `Completed` as you go.
 
 Never pick "the safest option" and keep going.
 
-## 5. Completion standard
+## 6. Completion standard
+
+Run the repository's applicable format, static analysis, type, test, and
+architecture checks for the changed path. If no automated architecture check
+exists, inspect every changed cross-boundary dependency and report that gap.
 
 Write an acceptance script the user can run with their own hands, with what they
 must see. Concrete enough to follow without asking anything further.
@@ -69,7 +100,7 @@ No test counts. No coverage. No list of changed files.
 If you cannot write that script, it is not done — say so plainly and say what is
 missing.
 
-## 6. Close the task
+## 7. Close the task
 
 Once the user confirms they see it working:
 

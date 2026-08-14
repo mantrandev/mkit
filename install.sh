@@ -61,7 +61,9 @@ install_block "$SRC/core/CLAUDE.block.md" "$TARGET/CLAUDE.md"
 
 mkdir -p "$TARGET/docs/templates"
 cp "$SRC/core/templates/active.md" "$TARGET/docs/templates/active.md"
+cp "$SRC/core/templates/architecture.md" "$TARGET/docs/templates/architecture.md"
 cp "$SRC/core/templates/decision.md" "$TARGET/docs/templates/decision.md"
+cp "$SRC/core/templates/spec.md" "$TARGET/docs/templates/spec.md"
 
 if [ ! -f "$TARGET/spec.md" ]; then
   cp "$SRC/core/templates/spec.md" "$TARGET/spec.md"
