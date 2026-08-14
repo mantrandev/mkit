@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "AI-agent harness workflow for people who cannot read code",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "plugins": [
     {
       "name": "mkit",
       "source": "./",
       "description": "Prevents agents from inventing policy, asks through concrete consequences, and proves results with steps the user can perform.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "category": "productivity",
       "tags": ["harness", "non-technical", "vibe-coding", "plain-language"]
     }
