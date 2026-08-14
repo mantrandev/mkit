@@ -48,30 +48,44 @@ Người dùng vẫn là người quyết định. Chỉ có ngôn ngữ đổi.
 
 ## Cài
 
+Trong Claude Code, gõ hai lệnh:
+
+```
+/plugin marketplace add mantrandev/MKit
+/plugin install mkit@mkit
+```
+
+Rồi mở dự án của bạn và gõ `/mkit:init` một lần.
+
+Không cần mở terminal, không cần cài gì thêm.
+
+<details>
+<summary>Cách khác — một lệnh trong terminal</summary>
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/mantrandev/MKit/main/install.sh | bash
 ```
 
-Cài vào thư mục hiện tại. Muốn cài chỗ khác thì thêm đường dẫn:
+Cài vào thư mục hiện tại; thêm đường dẫn phía sau để cài chỗ khác. Chạy lại chỉ
+cập nhật khối hướng dẫn, không đụng gì bạn đã viết.
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/mantrandev/MKit/main/install.sh | bash -s -- /duong/dan/du-an
-```
+Cách này đặt lệnh vào `.claude/skills` của chính dự án, nên tên lệnh là
+`/mkit-plan` thay vì `/mkit:plan`. Chỉ khác dấu, làm y hệt nhau.
 
-Chạy lại lần nữa chỉ cập nhật khối hướng dẫn, không đụng gì bạn đã viết.
+</details>
 
 ## Sáu lệnh
 
 | Lệnh | Làm gì |
 | --- | --- |
-| `/mkit-init` | Cài chỗ chứa tài liệu, hỏi sản phẩm của bạn làm gì |
-| `/mkit-plan` | Bàn một việc, chốt những gì cần chốt — **không sửa code** |
-| `/mkit-implement` | Làm thật, tới khi có thứ bạn tự bấm thử được |
-| `/mkit-fix` | Sửa lỗi — tái hiện trước, sửa sau |
-| `/mkit-continue` | Hôm trước làm tới đâu rồi |
-| `/mkit-ha` | Nói lại kiểu khác khi bạn không hiểu |
+| `/mkit:init` | Cài chỗ chứa tài liệu, hỏi sản phẩm của bạn làm gì |
+| `/mkit:plan` | Bàn một việc, chốt những gì cần chốt — **không sửa code** |
+| `/mkit:implement` | Làm thật, tới khi có thứ bạn tự bấm thử được |
+| `/mkit:fix` | Sửa lỗi — tái hiện trước, sửa sau |
+| `/mkit:continue` | Hôm trước làm tới đâu rồi |
+| `/mkit:ha` | Nói lại kiểu khác khi bạn không hiểu |
 
-`/mkit-ha` là lệnh quan trọng nhất trong sáu cái. Không hiểu mà gật cho qua là
+`/mkit:ha` là lệnh quan trọng nhất trong sáu cái. Không hiểu mà gật cho qua là
 cách hỏng phổ biến nhất — lệnh này biến "tôi không hiểu" thành một thứ gõ ra được.
 
 ## Bốn tài liệu

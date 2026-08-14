@@ -100,11 +100,21 @@ Dòng này là chỗ duy nhất người dùng có cơ hội nói "không, đừ
 
 ## Khi nào dừng
 
-Dừng khi không còn mục nào trong cổng chốt bị chạm mà chưa có quyết định. Không
-hỏi thêm cho đủ bộ. Mỗi câu hỏi thừa làm người dùng bớt đọc kỹ câu sau.
+Hỏi cho tới khi hết chỗ chưa rõ. Không có trần cứng về số câu.
 
-Nếu phải hỏi quá năm câu cho một việc, dừng lại và nói thẳng: việc này lớn hơn
-vẻ ngoài của nó, nên tách nhỏ ra làm từng phần.
+Thứ giới hạn số câu không phải một con số, mà là luật này:
+
+> **Mỗi câu hỏi phải trỏ được về một mục cụ thể trong sáu mục cổng chốt, hoặc
+> một trong năm dấu hiệu dừng giữa chừng.**
+
+Trỏ không được thì không hỏi — tự quyết và đi tiếp. Hỏi cho kỹ, cho đủ bộ, cho
+chắc ăn đều là hỏi thừa, và mỗi câu thừa làm người dùng bớt đọc kỹ câu sau.
+
+Nếu số câu vượt quá năm, vẫn hỏi tiếp, nhưng nói thêm một câu cho người dùng
+biết họ đang ở đâu:
+
+> Việc này lớn hơn vẻ ngoài của nó — còn khoảng 3 chỗ nữa cần bạn chốt. Muốn làm
+> gọn phần đầu trước rồi tính tiếp cũng được.
 
 ## Khi người dùng không có thẩm quyền
 
