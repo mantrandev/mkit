@@ -1,0 +1,27 @@
+{
+  "name": "mkit",
+  "version": "0.1.0",
+  "description": "Bộ kit harness workflow AI agent cho người không đọc được code. Chặn agent tự bịa chính sách, hỏi bằng ngôn ngữ hậu quả, chứng minh bằng thao tác tự bấm được.",
+  "author": {
+    "name": "mantrandev"
+  },
+  "repository": "https://github.com/mantrandev/MKit",
+  "license": "MIT",
+  "keywords": [
+    "harness",
+    "non-technical",
+    "vibe-coding",
+    "authority-gate",
+    "grilling",
+    "vietnamese"
+  ],
+  "skills": [
+    "./skills/init",
+    "./skills/plan",
+    "./skills/implement",
+    "./skills/fix",
+    "./skills/continue",
+    "./skills/grill-me",
+    "./skills/ha"
+  ]
+}

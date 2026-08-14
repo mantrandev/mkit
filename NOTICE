@@ -1,0 +1,37 @@
+# NOTICE
+
+mkit được xây trên ý tưởng và mã nguồn của hai dự án MIT khác. Cả hai đều đáng
+đọc bản gốc.
+
+## repository-harness — hoangnb24
+
+https://github.com/hoangnb24/repository-harness
+MIT License, Copyright (c) hoangnb24
+
+mkit kế thừa ba cơ chế từ dự án này:
+
+- cổng thẩm quyền (authority gate) — dừng trước khi sửa khi chính sách chưa
+  được người quyết định, và quy tắc "configurable defaults are not authority";
+- phân loại hình dạng công việc — lượng quy trình tương xứng với quy mô việc;
+- chuẩn hoàn thành dựa trên bằng chứng quan sát được, không dựa trên mô tả.
+
+Cấu trúc `decision.md` và vòng đời `Proposed / Accepted / Superseded / Rejected`
+lấy trực tiếp từ `docs/templates/decision.md`. Cơ chế khối có mốc đầu-cuối trong
+`AGENTS.md` và `CLAUDE.md` lấy từ `HARNESS:BEGIN` / `HARNESS:END`.
+
+mkit không dùng tầng Rust CLI và SQLite của dự án gốc. Tác giả đã đóng băng tầng
+đó ở decision 0022 và chuyển trọng tâm sang tài liệu Git-native ở decision 0019.
+
+## skills — Matt Pocock
+
+https://github.com/mattpocock/skills
+MIT License, Copyright (c) 2026 Matt Pocock
+
+Skill `mkit:grill-me` là bản fork của `grilling`. Giữ nguyên: cây thiết kế,
+khái niệm frontier, định dạng câu hỏi kèm câu trả lời đề xuất, và nguyên tắc
+"tìm dữ kiện là việc của agent, quyết định là việc của người dùng".
+
+Khác bản gốc ở hai điểm, do đối tượng người dùng khác:
+
+- hỏi một câu mỗi lần thay vì cả frontier trong một vòng;
+- mọi lựa chọn phải nêu hậu quả cụ thể, và không được dùng thuật ngữ kỹ thuật.
