@@ -34,9 +34,9 @@ có bằng chứng chạy được, không phải viết xong là tính.
 ## Cài đặt
 
 - [x] `install.sh` — chèn khối có mốc, chạy lại không đẻ khối trùng — ✅ chạy · 2026-08-14
-- [x] Cài qua `/plugin marketplace add` + `/plugin install` — ✅ chạy · 2026-08-14
-- [ ] Cài qua `/plugin marketplace add mantrandev/mkit` từ GitHub — ⬜ chưa thử, repo còn private
-- [ ] Chạy thật trên Codex — ⬜ chưa thử
+- [x] Claude Code — `/plugin marketplace add` + `/plugin install` — ✅ chạy · 2026-08-14
+- [x] Codex — `codex plugin marketplace add` + `codex plugin add` — ✅ chạy · 2026-08-14
+- [ ] Cài marketplace thẳng từ GitHub `mantrandev/mkit` — ⬜ chưa thử, repo còn private
 - [ ] Chạy thật trên Pi — ⬜ chưa thử
 - [ ] Chạy thật với một người dùng non-tech — ⬜ chưa thử
 
