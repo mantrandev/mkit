@@ -1,54 +1,55 @@
-# 0006 The agent creates checkpoints and never pushes by default
+# 0006 Agent tự lưu mốc, không bao giờ push
 
-Date: 2026-08-14
+Ngày: 2026-08-14
 
-## Status
+## Trạng thái
 
 Accepted
 
-## Context
+## Vì sao phải quyết
 
-Stopping mid-work for a question is safe only when a rollback point exists. Git
-commits provide that point, but the target user does not know git and will never
-request one. The normal agent default of committing only when asked would leave
-this user with no recovery point.
+Cơ chế "dừng giữa chừng để hỏi" chỉ an toàn nếu có đường quay lui. Đường quay lui
+là commit. Nhưng người dùng không biết git nên sẽ không bao giờ yêu cầu commit —
+mà mặc định thông thường của agent là chỉ commit khi được bảo.
 
-## Decision
+Giữ mặc định đó ở đây nghĩa là người dùng vĩnh viễn không có mốc nào để quay về.
 
-The agent **commits automatically** at exactly three moments: before stopping to
-ask a mid-work question, after a task passes acceptance, and before an operation
-that is difficult to undo.
+## Quyết định
 
-The agent **never pushes by default** and never force-pushes, resets, reverts, or
-discards unless the user explicitly requests that operation. A local checkpoint
-is an agent safety duty; sending work elsewhere belongs to the user.
+Agent **tự commit** ở đúng ba thời điểm: trước khi dừng lại hỏi, khi một việc đã
+nghiệm thu xong, và trước thao tác khó hoàn tác.
 
-When the user wants to go back, list checkpoints by **description and time**, not
-by hashes or branch names.
+Agent **không bao giờ push**, không force-push, không reset/revert/discard trừ khi
+người dùng yêu cầu đúng thứ đó. Lưu mốc là an toàn cục bộ và là việc của agent;
+đẩy code ra ngoài là quyết định của người dùng.
 
-## Technical constraints
+Khi người dùng muốn quay lui, liệt kê mốc bằng **mô tả và thời gian**, không bao
+giờ hiện hash hay tên nhánh.
 
-Commit messages use a Conventional Commits prefix followed by a description in
-the user's language. Describe what changed **for the user**, not the code change.
+## Ràng buộc kỹ thuật
 
-```text
-feat: users can sign in with Google
-fix: the Checkout button no longer gets stuck
-chore: checkpoint before deciding the spam limit
+Message commit: tiền tố Conventional Commits, phần mô tả viết bằng ngôn ngữ của
+người dùng, tả thứ đổi **với họ** chứ không tả thứ đổi trong code.
+
+```
+feat: người dùng đăng nhập được bằng Google
+fix: nút Thanh toán không còn đứng im
+chore: mốc lưu trước khi hỏi về mức chặn spam
 ```
 
-Only the prefix is machine-facing. The rest appears verbatim in the rollback
-list and must remain plain language.
+Tiền tố là phần duy nhất trong message dành cho máy đọc. Phần còn lại sẽ xuất
+hiện nguyên văn trong danh sách "quay về lúc nào", nên phải là tiếng người.
 
-## Alternatives considered
+## Đã cân nhắc gì khác
 
-1. **Wait for the user to request a commit.** This is the normal default and is
-   equivalent to having no checkpoints for this audience.
-2. **Discard unfinished work before asking.** Hearing "I deleted everything I
-   changed while waiting for your answer" pressures users to answer carelessly.
+1. **Chờ người dùng yêu cầu commit** — mặc định thông thường, và ở đây tương
+   đương không có checkpoint nào.
+2. **Hoàn tác sạch trước khi hỏi thay vì commit rồi hỏi** — nghe "tôi vừa xoá hết
+   những gì đã làm, chờ bạn trả lời" thì người dùng hoảng và trả lời quấy quá cho
+   xong.
 
-## Tradeoffs
+## Đánh đổi
 
-Git history contains more checkpoint commits than a developer-led repository.
-mkit accepts this because a dense checkpoint list is a feature for this user:
-every entry is a place they can safely return to.
+Lịch sử git sẽ có nhiều commit checkpoint hơn một repo do người viết. Chấp nhận,
+vì với người dùng này danh sách mốc dày là tính năng chứ không phải rác — mỗi mốc
+là một chỗ họ quay về được.

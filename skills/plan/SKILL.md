@@ -21,10 +21,20 @@ Once the script is writable, the request is clear enough. Move on. Never proceed
 while still guessing — every later question would be about a problem that is not
 theirs.
 
-For visual requests, do not ask in words. Run `mkit:grill-me`, section *When the
-unclear thing is visual*.
+For visual requests, identify the unresolved comparison without asking an open
+visual question. Do not invoke `grill-me` or edit files yet. Resolve it in step 4
+after the gate check and active plan exist.
 
-## 2. Start the active plan
+## 2. Run the decision gate
+
+Read `docs/decisions/` and check the request against the six items in the `MKIT`
+block of `AGENTS.md`. Determine every unanswered gate question without editing
+any file or invoking `grill-me`.
+
+The gate check is complete when every touched item is either covered by an
+existing decision or listed as an open question.
+
+## 3. Start the active plan
 
 Create `docs/active/<task-name>.md` from `docs/templates/active.md`. Fill
 `Desired outcome`, `Remaining`, and the acceptance script in `Acceptance`. Leave
@@ -33,23 +43,23 @@ Create `docs/active/<task-name>.md` from `docs/templates/active.md`. Fill
 This file must exist before the first decision question. It is the default home
 for every answer given while planning.
 
-## 3. Decision gate
+## 4. Resolve open choices
 
-Read `docs/decisions/` first. Check the request against the six items in the
-`MKIT` block of `AGENTS.md`.
+For every unresolved visual comparison, run `mkit:grill-me`, section *When the
+unclear thing is visual*. The active plan now exists before that call.
 
-For each item touched with no existing decision, run `mkit:grill-me`, one
+For each open gate question, run `mkit:grill-me`, one
 question at a time. Record every answer in the active plan first. `grill-me`
 decides whether a lasting choice also needs a separate decision record.
 
-## 4. Finish the plan
+## 5. Finish the plan
 
 Update the active plan with anything settled by the decision gate.
 
 Add the matching line to `spec.md` as `⬜ not started`, or `⏳ in progress` with a link
 to the file if the user says they want it built now.
 
-## 5. Stop
+## 6. Stop
 
 Report three things, briefly, in plain language:
 

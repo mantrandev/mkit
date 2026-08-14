@@ -1,51 +1,49 @@
-# 0003 The decision gate uses a fixed checklist
+# 0003 Cổng chốt dùng checklist cố định
 
-Date: 2026-08-14
+Ngày: 2026-08-14
 
-## Status
+## Trạng thái
 
 Accepted
 
-## Context
+## Vì sao phải quyết
 
-The decision gate matters only if it activates at the right time. If detection
-is unreliable, the rest of the workflow is meaningless. mkit needed a concrete
-detection mechanism.
+Cổng chốt chỉ có giá trị nếu nó nổ đúng lúc. Nổ sai thì sáu bước còn lại của
+luồng vô nghĩa. Phải chọn cơ chế phát hiện.
 
-## Decision
+## Quyết định
 
-Check six fixed items every time: **numbers and thresholds, money, personal
-data, irreversible deletion, third-party calls, and permissions**.
+Sáu mục cố định, đối chiếu từng mục: **con số/ngưỡng · tiền · dữ liệu cá nhân ·
+xoá không hồi phục · gọi bên thứ ba · phân quyền**.
 
-These six items are a floor, not a ceiling. Five additional mid-work signals can
-also stop the task.
+Sáu mục này là sàn, không phải trần — trong lúc làm còn năm dấu hiệu dừng thêm.
 
-For Tier B, false negatives cost much more than false positives. A missed stop
-is discovered only when a customer complains; an extra stop costs about 30 seconds.
+Cân bằng sai/sót ở Tier B lệch hẳn một bên: sót thì người dùng chỉ biết khi khách
+hàng kêu; thừa thì tốn 30 giây.
 
-## Technical constraints
+## Ràng buộc kỹ thuật
 
-The checklist must be mechanically testable. A request containing an
-irreversible deletion policy that does not stop is a failure.
+Checklist phải kiểm tra được bằng test: yêu cầu chứa "xoá" mà không dừng là fail.
 
-Each item must include a plain-language question pattern so the agent does not
-invent technical wording.
+Mỗi mục kèm sẵn cách hỏi bằng tiếng người, nếu không agent sẽ tự chế câu hỏi bằng
+thuật ngữ.
 
-## Alternatives considered
+## Đã cân nhắc gì khác
 
-1. **Let the agent interpret prose principles.** The upstream project does this
-   successfully because developers can detect invented policy. Tier B users
-   cannot, so copying that model transfers risk to the person least able to
-   carry it.
-2. **Always ask unless the request is allowlisted.** This creates noise. When
-   obvious work triggers questions, users start approving without reading.
+1. **Agent tự phán đoán theo nguyên tắc bằng lời** — cách upstream đang làm. Chạy
+   tốt ở đó vì dev tự phát hiện được khi agent bịa. Tier B thì không, nên bê
+   nguyên sang là đẩy rủi ro cho người ít khả năng gánh nhất.
+2. **Mặc định luôn hỏi, trừ danh sách an toàn** — chết vì nhiễu. Hỏi cả việc hiển
+   nhiên thì người dùng bắt đầu gật bừa.
 
-repository-harness decision 0019 states that sensitive terminology alone is not
-an automatic approval gate when expected behavior is explicit. That conclusion
-fits users who can express explicit behavior; Tier B users usually cannot.
+Ghi nhận ngược chiều: decision 0019 của repository-harness viết *"Sensitive
+terminology alone is not an automatic approval gate when expected behavior is
+explicit"* — tức tác giả đã thử và bác cách bắt theo từ khoá. Bối cảnh khác:
+người dùng của họ nói được "expected behavior explicit", Tier B thì gần như
+không bao giờ.
 
-## Tradeoffs
+## Đánh đổi
 
-A fixed list misses policy outside the six categories. The five mid-work signals
-reduce but do not eliminate that gap. mkit accepts it because high recall and
-testability matter more than theoretical completeness.
+Danh sách cố định sẽ bỏ sót loại chính sách không nằm trong sáu mục. Năm dấu
+hiệu dừng giữa chừng bù phần đó, nhưng không bù hết. Chấp nhận, vì recall cao và
+kiểm tra được quan trọng hơn bao phủ hoàn hảo.

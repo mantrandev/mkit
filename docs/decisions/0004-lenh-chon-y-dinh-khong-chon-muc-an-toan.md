@@ -1,47 +1,47 @@
-# 0004 Commands select intent, not safety level
+# 0004 Lệnh chọn ý định, không chọn mức an toàn
 
-Date: 2026-08-14
+Ngày: 2026-08-14
 
-## Status
+## Trạng thái
 
 Accepted
 
-## Context
+## Vì sao phải quyết
 
-mkit has four commands that can modify files. If each command applies a
-different safety level, users can accidentally choose their own protection by
-typing the wrong command.
+mkit có bốn lệnh sửa file. Nếu mỗi lệnh mang một mức kiểm soát khác nhau thì
+người dùng vô tình chọn được mức an toàn cho chính mình — bằng cách gõ nhầm lệnh.
 
-`plan` and `implement` are the most dangerous pair. A weaker gate would force
-the user to decide whether their request is already clear enough to skip
-discussion, which requires knowing what they do not know.
+Cặp `plan` và `implement` nguy hiểm nhất: nó bắt người dùng tự phán *"yêu cầu của
+tôi đã đủ rõ để bỏ qua bàn bạc chưa?"*, câu mà muốn trả lời được thì phải biết
+trước cái mình chưa biết.
 
-## Decision
+## Quyết định
 
-The decision gate runs for **every command that edits files**. No command disables it.
+Cổng chốt chạy ở **mọi lệnh có sửa file**. Không lệnh nào tắt được nó.
 
-`plan` and `implement` differ by **where they stop**, not by safety level.
-`plan` settles the work and stops; `implement` settles it and continues building.
-Users can express that difference plainly as "discuss it" or "build it now."
+`plan` và `implement` khác nhau ở **điểm dừng**, không khác mức an toàn: `plan`
+chốt xong rồi dừng, `implement` chốt xong rồi làm tiếp. Người dùng phát biểu được
+khác biệt này bằng lời của họ — "bàn thôi" và "làm luôn".
 
-Choosing the wrong command may add questions, but it cannot bypass the guardrail.
+Gõ nhầm lệnh chỉ tốn thêm vài câu hỏi, không thủng hàng rào.
 
-## Technical constraints
+## Ràng buộc kỹ thuật
 
-`plan`, `implement`, and `fix` use the same checklist before the first product-file
-edit. `plan` must preserve its promise not to edit code because it is the safe
-command for exploration.
+`plan`, `implement`, `fix` đều gọi cùng một checklist trước khi sửa file đầu tiên.
+`plan` cam kết không sửa file code nào — phải giữ đúng, vì đó là lệnh an toàn để
+người dùng thăm dò.
 
-## Alternatives considered
+## Đã cân nhắc gì khác
 
-1. **One entry point that classifies intent internally.** Rejected because Tier B
-   users can reliably distinguish "it is broken" and "continue the task";
-   combining those paths adds confusion.
-2. **Let `implement` skip grilling for speed.** This fails the exact user mkit
-   serves: the person choosing speed is also least able to detect invented policy.
+1. **Một cửa vào duy nhất, tự phân loại bên trong** — đã đề xuất và bị bác. `fix`
+   và `continue` là thứ Tier B tự nhận ra được ("nó đang lỗi", "làm tiếp"), gộp
+   lại chỉ làm khó thêm.
+2. **`implement` thật sự bỏ qua grill cho nhanh** — bán đứng đúng người nó phục
+   vụ: người gõ `implement` để đi nhanh chính là người ít khả năng phát hiện
+   agent vừa tự bịa chính sách nhất.
 
-## Tradeoffs
+## Đánh đổi
 
-Users who know exactly what they want still answer a few questions when the task
-touches the six gate items. mkit accepts this because skipping would require
-them to perform the risk assessment they cannot perform.
+Người dùng biết rõ mình muốn gì vẫn phải trả lời vài câu khi việc chạm sáu mục.
+Chấp nhận, vì cách duy nhất để bỏ qua là để họ tự đánh giá rủi ro — thứ họ không
+làm được.

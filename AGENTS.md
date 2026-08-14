@@ -170,9 +170,10 @@ own status inline: `✅ working` with a date, `⏳ in progress` with a link into
 `docs/active/`, or `⬜ not started`. Never make the reader guess which lines are real.
 
 Decisions have no "completed" state. They are `Accepted` or `Superseded` by a
-newer one. The old file stays exactly where it is — never overwritten, never
-deleted, never moved. Moving it means the next session cannot find it and asks
-the user all over again.
+newer one. The decision body is immutable; only its status may change when a
+newer decision supersedes it. Never translate, delete, or move an old decision.
+Changing its record means the next session cannot trust what was originally
+decided.
 
 ### Where answers go
 
@@ -189,7 +190,8 @@ Touching one of the six decision-gate items is not enough by itself. A
 task-local implementation or acceptance choice stays only in the active file.
 
 Do not ask the user to classify their answer. Decide it yourself, then report
-one line so they can object:
+one line in the user's established language so they can object. These are the
+English fallback meanings:
 
 > Recorded in this task only; no shared rule was created.
 

@@ -1,45 +1,46 @@
-# 0007 Answers start in the active plan
+# 0007 Câu trả lời bắt đầu trong active plan
 
-Date: 2026-08-14
+Ngày: 2026-08-14
 
-## Status
+## Trạng thái
 
 Accepted
 
-## Context
+## Vì sao phải quyết
 
-The `plan` workflow called `grill-me` before creating a file in `docs/active/`.
-With no task-local destination, an answer could become a separate file in
-`docs/decisions/` even when it applied only to the current task.
+Luồng `plan` gọi `grill-me` trước khi tạo file trong `docs/active/`. Vì chưa có
+chỗ ghi cho task hiện tại, câu trả lời dễ bị biến thành một file riêng trong
+`docs/decisions/`, kể cả khi nó chỉ phục vụ việc đang bàn.
 
-## Decision
+## Quyết định
 
-Follow the boundary used by `repository-harness`: every answer given during
-planning starts in the task's active plan. Promote it to a separate decision
-only when future tasks must inherit it and it materially changes product
-behavior, architecture, data ownership, security or recovery policy, public
-compatibility, validation requirements, or the source-of-truth/default workflow.
+Theo cách phân tầng của `repository-harness`: mọi câu trả lời trong lúc planning
+bắt đầu ở active plan của task. Chỉ nâng thành decision riêng khi lựa chọn đó có
+hiệu lực với các task tương lai và thay đổi đáng kể product, architecture, data
+ownership, security hoặc recovery policy, public compatibility, validation
+requirements, hay source-of-truth/default workflow.
 
-Touching one of the six gate items determines whether the agent must ask. It
-does not automatically turn the answer into a lasting rule.
+Việc một câu hỏi chạm sáu mục của decision gate chỉ quyết định rằng agent phải
+hỏi. Nó không tự động biến câu trả lời thành luật dài hạn.
 
-## Technical constraints
+## Ràng buộc kỹ thuật
 
-`plan` creates `docs/active/<task>.md` before calling `grill-me`.
+`plan` phải tạo `docs/active/<task>.md` trước khi gọi `grill-me`.
 
-`grill-me` records every answer under `Task decisions` first. It creates a file
-in `docs/decisions/` only when both the future-effect and lasting-change tests pass.
+`grill-me` phải ghi mọi câu trả lời vào `Quyết định trong việc này` trước. Chỉ
+khi đủ cả hai điều kiện về hiệu lực tương lai và loại thay đổi lâu dài mới tạo
+thêm file trong `docs/decisions/`.
 
-## Alternatives considered
+## Đã cân nhắc gì khác
 
-1. **Create one decision file for every answer.** This is easy to search but
-   mixes lasting rules with details of individual tasks.
-2. **Ask only whether another task next week would reuse the answer.** This is
-   too broad. A feature's acceptance criteria may remain true next week without
-   deserving project-wide authority.
+1. **Mỗi câu trả lời tạo một decision riêng** — dễ tìm nhưng làm thư mục chứa
+   luật dài hạn bị lẫn với chi tiết của từng task.
+2. **Chỉ dùng câu hỏi “task khác tuần sau có dùng lại không”** — quá rộng; nhiều
+   tiêu chí nghiệm thu của một tính năng vẫn đúng tuần sau nhưng không đáng trở
+   thành luật cho toàn dự án.
 
-## Tradeoffs
+## Đánh đổi
 
-A promoted choice appears both in the active plan and in its separate decision
-record. mkit accepts this deliberate duplication so the plan retains its full
-context while future tasks can find lasting rules without reading old plans.
+Một lựa chọn được nâng thành luật chung sẽ xuất hiện ở active plan và decision
+riêng. Chấp nhận sự lặp có chủ đích này để plan giữ đủ bối cảnh, còn các task sau
+vẫn tìm được luật dài hạn mà không phải đọc lại plan cũ.

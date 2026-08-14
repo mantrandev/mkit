@@ -1,50 +1,50 @@
-# 0005 spec.md is one inventory with status on every line
+# 0005 spec.md là bảng tổng có trạng thái từng dòng
 
-Date: 2026-08-14
+Ngày: 2026-08-14
 
-## Status
+## Trạng thái
 
 Accepted
 
-## Context
+## Vì sao phải quyết
 
-`spec.md` is the only document the target user is expected to read. Their
-question is always, "What have I actually built?" If working behavior and future
-plans look the same, they cannot distinguish them.
+`spec.md` là tài liệu duy nhất người dùng thật sự đọc. Câu họ mang tới nó luôn
+là *"tôi đã xây được cái gì rồi"*. Nếu nó lẫn giữa thứ đang chạy và thứ mới lên
+kế hoạch, họ không có cách nào phân biệt.
 
-## Decision
+## Quyết định
 
-`spec.md` is the inventory for the whole product, including working and unbuilt
-features. **Every line declares its own status** instead of relying on file-level
-status:
+`spec.md` là bảng tổng của cả dự án — gồm cả thứ đã chạy và chưa chạy. Nhưng
+**trạng thái khai ở mức từng dòng**, không phải mức cả file:
 
-```text
-- [x] Email sign-in     ✅ working · 2026-08-02
-- [ ] Google sign-in    ⏳ in progress · docs/active/google-login.md
-- [ ] Password reset    ⬜ not started
+```
+- [x] Đăng nhập bằng email    ✅ chạy · 2026-08-02
+- [ ] Đăng nhập Google        ⏳ đang làm · docs/active/google-login.md
+- [ ] Quên mật khẩu           ⬜ chưa làm
 ```
 
-The reader sees status where they read the feature and does not need to remember
-which section it came from.
+Người đọc thấy trạng thái ngay tại chỗ đọc, không phải nhớ nó thuộc mục nào.
 
-Only `✅ working` means the behavior was verified, and it can be applied only
-after the task moves to `docs/done/`.
+Chỉ dòng `✅ chạy` mới có nghĩa là kiểm được thật, và chỉ được đánh dấu khi việc
+đã chuyển sang `docs/done/`.
 
-## Technical constraints
+## Ràng buộc kỹ thuật
 
-Every `⏳ in progress` line links to a file in `docs/active/`. Cancelled work
-must lose that line so the inventory never implies that abandoned work continues.
+Dòng `⏳ đang làm` phải kèm đường dẫn tới file trong `docs/active/`. Không được
+để trạng thái treo: việc bị huỷ thì xoá dòng `⏳`, nếu không người đọc tưởng nó
+vẫn đang được làm.
 
-## Alternatives considered
+## Đã cân nhắc gì khác
 
-1. **List only working features.** The user would need to open and combine two
-   documents, which they will not do.
-2. **Separate "Current" and "Planned" sections.** This moves the classification
-   burden to the reader, who is least able to carry it and may misremember while
-   scanning.
+1. **Chỉ chứa thứ đã chạy** — người dùng phải mở hai nơi mới ghép được bức tranh,
+   và họ sẽ không mở.
+2. **Hai mục "Đang có" / "Sắp có" trong cùng file** — chuyển gánh nặng phân biệt
+   sang người đọc, mà người đọc là người ít khả năng phân biệt nhất. Đọc lướt,
+   nhớ nhầm.
 
-## Tradeoffs
+## Đánh đổi
 
-Each feature requires two `spec.md` updates: add `⬜ not started` after planning,
-then change it to `✅ working` with a date after acceptance. mkit accepts that
-extra action so users never promise customers an unbuilt feature.
+Mỗi tính năng phải ghi vào `spec.md` hai lần — lúc chốt xong thì thêm dòng
+`⬜ chưa làm`, lúc xong thì đổi thành `✅ chạy` kèm ngày. Chấp nhận thêm một
+thao tác, đổi lấy việc người dùng không bao giờ hứa với khách một tính năng chưa
+tồn tại.

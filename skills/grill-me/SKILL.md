@@ -29,10 +29,15 @@ asked again — that is why those files exist.
 
 Locate the current file in `docs/active/`. It must exist before the first
 question because every answer starts as a task-local choice. When the calling
-workflow has not created it yet, create it from `docs/templates/active.md`
-before asking.
+workflow has not created it yet, create it from `docs/templates/active.md` and
+replace every placeholder before asking. Fill the task name, date, related
+`spec.md` entry when known, `Desired outcome` in the user's own words,
+`Remaining` with the current open choice, and an observable `Acceptance` script.
 
 ## Question format
+
+Render every fixed label and sentence below in the user's established language.
+The block shows the English fallback, not mandatory wording.
 
 ```
 ❓ **Decision needed** — <question, one line, no jargon>
@@ -109,7 +114,9 @@ it replaces an older decision, set that file's status to `Superseded by NNNN`
 
 **Keep local** → make no file in `docs/decisions/`.
 
-Then report exactly one line:
+Then report one line in the user's established language with exactly one of
+these meanings. Use the English fallback only when the user has not established
+another language:
 
 > Recorded in this task and promoted to a shared rule for future work.
 

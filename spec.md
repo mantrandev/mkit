@@ -13,7 +13,7 @@ verified with executable or observable evidence; written code alone does not cou
 - [x] Completion requires steps the user can perform; test counts are not the user-facing evidence — ✅ working · 2026-08-14
 - [x] Restraint rules — write the minimum and touch only what the request requires — ✅ working · 2026-08-14
 - [x] Checkpoint rules — commit automatically at three moments and never push without a user request — ✅ working · 2026-08-14
-- [ ] English-default language across every surface — ⏳ in progress · [English default](docs/active/default-english.md)
+- [ ] English-default distributed surfaces and new records — ⏳ in progress · [English default](docs/active/default-english.md)
 
 ## Commands
 
