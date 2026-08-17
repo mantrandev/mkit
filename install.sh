@@ -38,7 +38,7 @@ case "$(uname -s)" in
     esac
     ;;
   *)
-    die "unsupported system: $(uname -s). Install through the Claude Code or Codex plugin instead."
+    die "mkit supports macOS. $(uname -s) is not supported."
     ;;
 esac
 

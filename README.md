@@ -1,155 +1,123 @@
 # mkit
 
-An AI-agent harness workflow for people who **cannot read code**.
+An AI-agent harness for people who **cannot read code**.
+
+The agent still does the work. You still make the decisions that are yours —
+even though you do not speak the technical language.
 
 ## The problem
 
-Existing agent harnesses are strong, but they usually assume the user is a
-developer. They stop at the right moment for human judgment, then ask in terms a
-non-technical user cannot answer:
+Ask for *"stop people spamming my site"* and a good harness stops to ask for a
+quota, a trusted key, an enforcement topology. You cannot answer that; you do not
+have the concepts.
 
-> *Add rate limiting* lacks a quota, trusted key, enforcement topology, and
-> response contract. Stop.
+Skipping the question is worse. The agent picks a number, writes it into the
+code, and you find out when a customer complains.
 
-The user said, "Stop people from spamming my website." They cannot answer the
-technical question because they do not have the concepts behind it.
-
-Skipping the question is worse. The agent silently chooses a number and writes
-it into code, while the user cannot detect the invented policy. They discover it
-only after a customer complains.
-
-## What mkit does
-
-mkit keeps the decision gate and acts as a **two-way translator** at that gate.
-
-**Translate down** — turn a technical question into consequences the user can picture:
+mkit keeps the question and changes the language:
 
 ```text
-❓ Decision needed — How aggressively should repeated clicks be blocked?
+❓ How aggressively should repeated clicks be blocked?
 
 A. Strict — 20 attempts per minute
-   → Gain: almost all spam accounts are stopped
-   → Tradeoff: a real customer clicking quickly may be blocked for 1 minute
+   → almost all spam is stopped
+   → a real customer clicking fast is blocked for 1 minute
 
 B. Lenient — 100 attempts per minute
-   → Gain: real customers are almost never blocked by mistake
-   → Tradeoff: several dozen spam accounts may need manual cleanup each day
+   → real customers are almost never blocked
+   → a few dozen spam accounts need cleanup each day
 
-➡️ I recommend A because manual cleanup is expensive, while a customer blocked
-by mistake can retry after 1 minute.
+➡️ I recommend A: cleanup costs you time, a blocked customer waits 1 minute.
 ```
 
-**Translate up** — turn technical evidence into steps the user can perform:
+And it changes what "done" means:
 
 ```text
 ✗ 23 tests passed, coverage 87%
-✓ Open /sign-up and click Submit 21 times. Attempt 21 must show "Try again in 1 minute."
+✓ Open /sign-up and click Submit 21 times.
+  Attempt 21 must show "Try again in 1 minute."
 ```
-
-The user still decides. Only the language changes.
 
 ## Install
 
-### Claude Code
-
-Two commands:
+macOS. Claude Code:
 
 ```text
 /plugin marketplace add mantrandev/mkit
 /plugin install mkit@mkit
 ```
 
-Open your project and run `/mkit:init` once.
+Then, in your project:
 
-### Codex
+```bash
+curl -fsSL https://raw.githubusercontent.com/mantrandev/mkit/main/install.sh | bash
+```
 
-Run:
+That writes the rules, the documents, and the gate program. It prints one last
+step you have to do yourself — see [The gate](#the-gate).
+
+<details>
+<summary>Codex and Pi</summary>
 
 ```bash
 codex plugin marketplace add mantrandev/mkit --ref main
 codex plugin add mkit@mkit
 ```
 
-Open a new Codex thread in your project and run `$mkit:init` once. Start another
-new thread afterward so Codex loads the newly installed project rules.
+Open a new thread and run `$mkit:init` once, then start another thread so the
+project rules load. Pi reads `AGENTS.md` directly.
 
-You can also open `/plugins`, select the `mkit` marketplace, and install the
-`mkit` plugin. Start a new thread after installation.
-
-<details>
-<summary>Install without a plugin using one terminal command</summary>
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/mantrandev/mkit/main/install.sh | bash
-```
-
-This installs into the current directory. Add a target path after the command to
-install elsewhere. Running it again refreshes the marked instruction blocks and
-preserves everything outside them.
-
-This path installs rules and workflows for Codex and Pi without a plugin.
+Codex and Pi get the rules and the workflows. They do not get the enforced gate
+below — that currently exists for Claude Code only.
 
 </details>
 
-## Three agents, one rule set
+## The gate
 
-| Agent | Reads | Usage |
-| --- | --- | --- |
-| **Claude Code** | `CLAUDE.md` → `AGENTS.md` | Run `/mkit:plan`, `/mkit:fix`, and the other slash commands |
-| **Codex** | plugin → `AGENTS.md` | Run `$mkit:init` once, then use plain-language requests |
-| **Pi** | `AGENTS.md` | Use plain-language requests |
+mkit stops before editing files when a request touches one of six things:
 
-Rules live in exactly one place: `AGENTS.md`. `CLAUDE.md` contains only an
-`@AGENTS.md` import. Parallel copies inevitably drift and leave the agent without
-a clear source of truth.
+**numbers and thresholds · money · personal data · irreversible deletion ·
+third-party calls · permissions**
 
-Slash commands are a Claude Code convenience. Codex and Pi select the same
-workflow through the routing table at the end of the `MKIT` block, which points
-to `.mkit/workflows/`.
+The rule is simple: the agent decides when a mistake is cheap and easy to spot.
+You decide when a mistake could stay invisible to you. Changing a button colour
+asks you nothing.
 
-## Six commands
+This is not a written promise. `install.sh` installs a small program that
+**refuses the file edit** until the gate has run for your current request, and
+fails closed on every error path.
 
-| Command | Purpose |
+Arming it is one manual step, and only you can do it — merge
+`.mkit/hooks/claude-code.json` into `.claude/settings.json`. Until you do, the
+agent can still change files without asking you anything.
+
+## Commands
+
+| Command | What it does |
 | --- | --- |
-| `/mkit:init` | Install the document structure and observe an existing codebase without redesigning it |
-| `/mkit:plan` | Discuss and settle a task without editing code |
-| `/mkit:implement` | Build until the user can test the result themselves |
-| `/mkit:fix` | Reproduce a bug first, then fix it |
-| `/mkit:continue` | Recover unfinished work from an earlier session |
-| `/mkit:ha` | Explain the last point a different way |
+| `/mkit:init` | Set up the documents, reading an existing codebase without redesigning it |
+| `/mkit:plan` | Talk a task through without touching code |
+| `/mkit:implement` | Build until you can test it yourself |
+| `/mkit:fix` | Reproduce the bug first, then fix it |
+| `/mkit:continue` | Pick up unfinished work from an earlier session |
+| `/mkit:ha` | Say the last thing again, differently |
 
-After `$mkit:init`, Codex and Pi users can speak normally. The agent selects the
-matching workflow.
+`/mkit:ha` matters most. People who do not understand tend to nod instead of
+asking. This makes "I do not understand" one keystroke.
 
-`/mkit:ha` is the most important command. A user who does not understand often
-agrees instead of asking. This command makes "I do not understand" easy to say.
+On Codex and Pi, just say what you want in plain language.
 
-## Five documents
+## Documents
 
 | File | Answers |
 | --- | --- |
-| `spec.md` | What the product can do, with status on every line |
-| `docs/architecture.md` | What owns each responsibility and which dependencies are allowed now |
-| `docs/decisions/` | Lasting rules that future work must inherit |
-| `docs/active/` | Durable work in progress, how far it got, and what remains |
-| `docs/done/` | What was completed and how it was verified |
+| `spec.md` | What the product does, with status on every line |
+| `docs/architecture.md` | What owns what, and which dependencies are allowed |
+| `docs/decisions/` | Rules that bind every future task |
+| `docs/active/` | Work in progress, how far it got, what remains |
+| `docs/done/` | What was finished, and how it was proven |
 
-Planning stays in the conversation by default. Create `docs/active/` only for
-work already underway that must survive the current conversation because it
-spans sessions, requires coordination, or needs a recovery trail.
-
-When a choice is settled, update `spec.md` if it defines current product
-behavior or acceptance. Create a separate file in `docs/decisions/` only when
-future work must inherit a consequential choice and its reason. One answer may
-update both: the specification says what is true now, while the decision
-preserves why it was chosen.
-
-Architecture follows the same separation. `docs/architecture.md` describes the
-boundaries and dependency direction that exist now. A decision record preserves
-why a consequential architectural choice must bind future work.
-
-`spec.md` is the only document the target user must read. Each line declares its
-own status:
+`spec.md` is the only one you have to read:
 
 ```markdown
 - [x] Email sign-in     ✅ working · 2026-08-02
@@ -157,66 +125,19 @@ own status:
 - [ ] Password reset    ⬜ not started
 ```
 
-## Decision gate
+## What the agent owes you
 
-mkit stops when a task touches one of six categories:
+You cannot see these failures, so the rules make the agent responsible for them:
+write the minimum, touch only what the request needs, keep the architecture the
+project already has, offer a simpler path before building, and say out loud what
+was never tested. Silence sounds like verification.
 
-**numbers and thresholds · money · personal data · irreversible deletion · third-party calls · permissions**
-
-Outside those categories, the agent decides implementation details such as
-variable names, file boundaries, libraries, and routine layout choices. The gate
-is designed to activate rarely. Changing a button color requires no policy question.
-
-The dividing rule is simple: the agent decides when a mistake is cheap and easy
-to detect. The user decides when a mistake could remain invisible to them.
-
-Needing a question does not automatically create an active task or a shared
-rule. The gate decides **whether the agent must ask**. The answer's meaning
-decides whether it updates current product truth, lasting rationale, active
-recovery context, or only the current bounded task.
-
-## What the user cannot see
-
-People who cannot read code also cannot detect several common failure modes.
-mkit makes the agent responsible for them:
-
-- **Write the minimum.** Do not add unrequested features or abstractions for a
-  single use. Rewrite 200 lines when 50 are enough.
-- **Touch only what the request requires.** Do not clean adjacent code, reformat
-  working files, or alter unrelated behavior.
-- **Do not delete, reset, or force-push** unless the user requests that exact operation.
-- **Present a simpler path before building** when it is faster, safer, or easier to change.
-- **Disclose every untested or unfinished part.** Silence sounds like complete verification.
-- **Preserve the project's architecture.** Put behavior in its current owner,
-  keep dependency direction intact, avoid circular dependencies, and run the
-  checks that apply to the changed path.
-
-## Architecture without architecture astronautics
-
-mkit does not make every repository use Clean Architecture. It treats Clean
-Architecture as one project profile among many and follows it only where the
-repository already uses it or deliberately adopts it.
-
-`mkit:init` has two paths:
-
-- **Existing codebase:** read the code, tests, build files, and local rules. Keep
-  an existing architecture document, or create a fully populated
-  `docs/architecture.md` that describes the code as it is. Initialization does
-  not reorganize source code.
-- **Empty repository:** install mkit without creating layers or an empty
-  architecture record. The first implementation uses the smallest sufficient
-  structure and records boundaries only after they exist.
-
-Implementation and bug-fix workflows read that architecture before editing
-product code. When no automated boundary check exists, the agent must inspect
-every changed cross-boundary dependency and disclose that gap.
+It never deletes, resets, or force-pushes unless you ask for exactly that.
 
 ## Rollback
 
-The user does not need to know git. The agent creates local checkpoints before
-stopping mid-work and after a task is accepted.
-
-When asked to go back, the agent presents choices like:
+You do not need to know git. Checkpoints are saved before the agent stops to ask
+and after a task is accepted. Ask to go back and you get:
 
 ```text
 Return to which point?
@@ -224,18 +145,16 @@ Return to which point?
 2. Before adding Google sign-in — yesterday
 ```
 
-No hashes and no branch names. The user chooses a number.
-
-The agent never pushes by default. A local checkpoint is a safety duty; sending
-code elsewhere requires an explicit user request.
+No hashes, no branch names. Pick a number. It never sends your code anywhere
+without you asking.
 
 ## Built from
 
-- [`hoangnb24/repository-harness`](https://github.com/hoangnb24/repository-harness) — authority gate, work classification, completion standard, and `decision.md` structure
+- [`hoangnb24/repository-harness`](https://github.com/hoangnb24/repository-harness)
+  — authority gate, work classification, completion standard, `decision.md` structure
 - [`mattpocock/skills`](https://github.com/mattpocock/skills) — the `grilling` pattern
 
-Both projects use the MIT license. See [`NOTICE`](./NOTICE) for the exact inherited
-and changed behavior.
+Both MIT. [`NOTICE`](./NOTICE) records exactly what was inherited and what changed.
 
 ## License
 

@@ -1,6 +1,6 @@
 [package]
 name = "mkit-gate"
-version = "1.1.1"
+version = "1.2.0"
 edition = "2021"
 license = "MIT"
 description = "Blocks file edits until the mkit authority gate has run for the current request."

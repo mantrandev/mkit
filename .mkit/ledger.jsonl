@@ -11,3 +11,6 @@
 {"ts":1786955454,"mkit":"1.1.0","agent":"unknown","kind":"request"}
 {"ts":1786955512,"mkit":"1.1.0","agent":"unknown","kind":"gate"}
 {"ts":1786955547,"mkit":"1.1.0","agent":"unknown","kind":"gate"}
+{"ts":1786955626,"mkit":"1.1.0","agent":"unknown","kind":"request"}
+{"ts":1786955681,"mkit":"1.1.0","agent":"unknown","kind":"gate","decision":"0015","touches":["third-party"]}
+{"ts":1786955691,"mkit":"1.1.0","agent":"unknown","kind":"gate","decision":"0015","touches":["third-party"]}

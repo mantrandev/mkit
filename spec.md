@@ -39,6 +39,7 @@ verified with executable or observable evidence; written code alone does not cou
 - [x] `install.sh` — updates marked blocks without duplicating them — ✅ working · 2026-08-14
 - [x] Claude Code — `/plugin marketplace add` plus `/plugin install` — ✅ working · 2026-08-14
 - [x] Codex — `codex plugin marketplace add` plus `codex plugin add` — ✅ working · 2026-08-14
+- [x] macOS is the supported platform; Windows is refused with a clear message — ✅ working · 2026-08-17
 - [ ] Install the marketplace directly from GitHub at `mantrandev/mkit` — ⬜ not tested
 - [ ] Run on Pi — ⬜ not tested
 - [x] Rules, workflows, and records used without reading code — ✅ working · 2026-08-17 · the author worked blind across two projects
