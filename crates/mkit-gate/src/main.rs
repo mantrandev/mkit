@@ -403,10 +403,12 @@ fn is_slug(value: &str) -> bool {
 fn agent_name() -> String {
     let raw = env::var("MKIT_AGENT").unwrap_or_default();
     if AGENTS.contains(&raw.as_str()) {
-        raw
-    } else {
-        "unknown".to_string()
+        return raw;
     }
+    if env::var_os("CLAUDECODE").is_some() {
+        return "claude".to_string();
+    }
+    "unknown".to_string()
 }
 
 fn decision_number(path: &str) -> Option<String> {

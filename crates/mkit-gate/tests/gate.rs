@@ -463,6 +463,34 @@ fn agents_can_record_their_own_signals() {
 }
 
 #[test]
+fn the_agent_is_named_without_configuration() {
+    let lab = Lab::new();
+    let run = |vars: Vec<(&str, &str)>, clear: Vec<&str>| {
+        let mut command = Command::new(BIN);
+        command
+            .args(["log", "--kind", "ha"])
+            .env("MKIT_ROOT", &lab.root)
+            .current_dir(&lab.root);
+        for name in clear {
+            command.env_remove(name);
+        }
+        for (name, value) in vars {
+            command.env(name, value);
+        }
+        command.output().unwrap();
+    };
+
+    run(vec![("CLAUDECODE", "1")], vec!["MKIT_AGENT"]);
+    assert!(lab.ledger().contains("\"agent\":\"claude\""));
+
+    run(vec![("MKIT_AGENT", "codex")], vec!["CLAUDECODE"]);
+    assert!(lab.ledger().contains("\"agent\":\"codex\""));
+
+    run(vec![("MKIT_AGENT", "not-an-agent")], vec!["CLAUDECODE"]);
+    assert!(lab.ledger().contains("\"agent\":\"unknown\""));
+}
+
+#[test]
 fn the_ledger_refuses_prose_and_secrets() {
     let lab = Lab::new();
     let cases: Vec<Vec<&str>> = vec![
