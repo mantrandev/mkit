@@ -51,12 +51,13 @@ fn main() -> ExitCode {
         Some("declare") => run_declare(&args[1..]),
         Some("check") => run_check(&args[1..]),
         Some("log") => run_log(&args[1..]),
+        Some("study") => run_study(&args[1..]),
         Some("--version") | Some("-V") => {
             println!("mkit-gate {}", env!("CARGO_PKG_VERSION"));
             ExitCode::from(OK)
         }
         Some(other) => usage(&format!("unknown command '{other}'")),
-        None => usage("expected one of: turn, declare, check, log"),
+        None => usage("expected one of: turn, declare, check, log, study"),
     }
 }
 
@@ -68,6 +69,7 @@ fn usage(reason: &str) -> ExitCode {
     eprintln!(
         "       mkit-gate log --kind <kind> [--after <command>] [--round <n>] [--tags <slug,slug>]"
     );
+    eprintln!("       mkit-gate study");
     eprintln!("items: {}", GATE_ITEMS.join(", "));
     eprintln!("kinds: {}", EVENT_KINDS.join(", "));
     eprintln!("commands: {}", COMMANDS.join(", "));
@@ -294,6 +296,141 @@ fn run_log(rest: &[String]) -> ExitCode {
     };
     append_line(&root, &line);
     ExitCode::from(OK)
+}
+
+fn run_study(rest: &[String]) -> ExitCode {
+    if !rest.is_empty() {
+        return usage("study takes no arguments");
+    }
+    let root = match repo_root() {
+        Ok(value) => value,
+        Err(reason) => {
+            eprintln!("mkit-gate: {reason}");
+            return ExitCode::from(OK);
+        }
+    };
+    let body = match fs::read_to_string(root.join(".mkit").join("ledger.jsonl")) {
+        Ok(value) => value,
+        Err(_) => {
+            println!("Nothing has been recorded yet.");
+            return ExitCode::from(OK);
+        }
+    };
+
+    let mut requests = 0usize;
+    let mut blocked = 0usize;
+    let mut ha: Vec<(String, usize)> = Vec::new();
+    let mut rework: Vec<(String, usize, u64)> = Vec::new();
+    let mut collisions: Vec<(String, usize)> = Vec::new();
+    let mut refused: Vec<(String, usize)> = Vec::new();
+
+    for line in body.lines() {
+        let kind = match json_string(line, "kind") {
+            Some(value) => value,
+            None => continue,
+        };
+        let after = json_string(line, "after").unwrap_or_else(|| "unknown".to_string());
+        match kind.as_str() {
+            "request" => requests += 1,
+            "blocked" => blocked += 1,
+            "ha" => bump(&mut ha, &after),
+            "rework" => {
+                let round = json_number(line, "round").unwrap_or(1);
+                match rework.iter_mut().find(|entry| entry.0 == after) {
+                    Some(entry) => {
+                        entry.1 += 1;
+                        entry.2 = entry.2.max(round);
+                    }
+                    None => rework.push((after, 1, round)),
+                }
+            }
+            "collision" => {
+                let mut tags = json_array(line, "tags");
+                if tags.is_empty() {
+                    continue;
+                }
+                tags.sort();
+                bump(&mut collisions, &tags.join(" + "));
+            }
+            "refused" => {
+                for item in json_array(line, "touches") {
+                    bump(&mut refused, &item);
+                }
+            }
+            _ => {}
+        }
+    }
+
+    ha.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
+    collisions.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
+    refused.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
+    rework.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
+
+    println!("mkit ledger - {requests} requests recorded");
+
+    if !ha.is_empty() {
+        println!("\nExplanations that did not land");
+        for (name, count) in &ha {
+            println!("  {name:<14} {count} of {requests} requests");
+        }
+    }
+    if !rework.is_empty() {
+        println!("\nWork the user said was wrong");
+        for (name, count, worst) in &rework {
+            println!("  {name:<14} {count} of {requests} requests, worst took {worst} attempts");
+        }
+    }
+    if !collisions.is_empty() {
+        println!("\nRules that could not both be followed");
+        for (pair, count) in &collisions {
+            println!("  {pair:<28} {count}");
+        }
+    }
+    if !refused.is_empty() {
+        println!("\nRequests stopped with nothing on record to settle them");
+        for (item, count) in &refused {
+            println!("  {item:<14} {count}");
+        }
+    }
+    if blocked > 0 {
+        println!("\nFiles were edited before the gate had run");
+        println!("  {blocked} of {requests} requests");
+    }
+
+    println!("\nCounts only. Nothing here says what to change.");
+    ExitCode::from(OK)
+}
+
+fn bump(entries: &mut Vec<(String, usize)>, key: &str) {
+    match entries.iter_mut().find(|entry| entry.0 == key) {
+        Some(entry) => entry.1 += 1,
+        None => entries.push((key.to_string(), 1)),
+    }
+}
+
+fn json_number(body: &str, key: &str) -> Option<u64> {
+    let needle = format!("\"{key}\":");
+    let rest = &body[body.find(&needle)? + needle.len()..];
+    let digits: String = rest.chars().take_while(|c| c.is_ascii_digit()).collect();
+    digits.parse().ok()
+}
+
+fn json_array(body: &str, key: &str) -> Vec<String> {
+    let needle = format!("\"{key}\":[");
+    let start = match body.find(&needle) {
+        Some(value) => value + needle.len(),
+        None => return Vec::new(),
+    };
+    let rest = &body[start..];
+    let end = match rest.find(']') {
+        Some(value) => value,
+        None => return Vec::new(),
+    };
+    rest[..end]
+        .split(',')
+        .map(|item| item.trim().trim_matches('"').to_string())
+        .filter(|item| !item.is_empty())
+        .collect()
 }
 
 fn record(root: &Path, event: &Event) {

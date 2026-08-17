@@ -1,60 +1,82 @@
 # mkit
 
-An AI-agent harness for people who **cannot read code**.
+Your AI agent stops and asks you, instead of guessing.
 
-The agent still does the work. You still make the decisions that are yours —
-even though you do not speak the technical language.
+For people who build things by describing them, and cannot read code.
 
-## The problem
+## What changes
 
-Ask for *"stop people spamming my site"* and a good harness stops to ask for a
-quota, a trusted key, an enforcement topology. You cannot answer that; you do not
-have the concepts.
+Without mkit:
 
-Skipping the question is worse. The agent picks a number, writes it into the
-code, and you find out when a customer complains.
+```
+You    add paid plans
+Agent  done — 99k, 199k and 499k per month
 
-mkit keeps the question and changes the language:
-
-```text
-❓ How aggressively should repeated clicks be blocked?
-
-A. Strict — 20 attempts per minute
-   → almost all spam is stopped
-   → a real customer clicking fast is blocked for 1 minute
-
-B. Lenient — 100 attempts per minute
-   → real customers are almost never blocked
-   → a few dozen spam accounts need cleanup each day
-
-➡️ I recommend A: cleanup costs you time, a blocked customer waits 1 minute.
+       it picked your prices. you never found out.
 ```
 
-And it changes what "done" means:
+With mkit:
 
-```text
-✗ 23 tests passed, coverage 87%
-✓ Open /sign-up and click Submit 21 times.
-  Attempt 21 must show "Try again in 1 minute."
 ```
+You    add paid plans
+Agent  I cannot pick your prices. How much per month?
+
+       it stopped. you decide.
+```
+
+## It stops for six things
+
+```
+  numbers      how many, how long, when it runs out
+  money        prices, fees, refunds
+  personal     emails, names, anything about a person
+  deleting     things nobody can get back
+  other apps   Stripe, Google, sending mail
+  who can      who is allowed to see or do what
+```
+
+Everything else it just builds. Changing a button colour asks you nothing.
+
+## How it works
+
+```
+  you speak
+      │
+      ▼
+  does this touch one of the six?
+      │
+      ├── no ───▶ builds it
+      │
+      └── yes ──▶ already decided before? ── yes ─▶ builds it
+                        │
+                        no
+                        │
+                        ▼
+                  asks you, then writes your answer down
+                  so it never asks the same thing twice
+```
+
+The stop is real. A small program refuses the change until the question has been
+asked. It is not a note the agent can skip.
 
 ## Install
 
-macOS. Claude Code:
+macOS. Two steps.
 
-```text
+**1.** In Claude Code:
+
+```
 /plugin marketplace add mantrandev/mkit
 /plugin install mkit@mkit
 ```
 
-Then, in your project:
+**2.** In your project folder:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/mantrandev/mkit/main/install.sh | bash
 ```
 
-The plugin gives you the commands and switches the gate on. The script writes the
-rules, the documents, and the gate program into your project. You need both.
+Nothing to configure. Projects without mkit are left alone.
 
 <details>
 <summary>Codex and Pi</summary>
@@ -64,96 +86,93 @@ codex plugin marketplace add mantrandev/mkit --ref main
 codex plugin add mkit@mkit
 ```
 
-Open a new thread and run `$mkit:init` once, then start another thread so the
-project rules load. Pi reads `AGENTS.md` directly.
-
-Codex and Pi get the rules and the workflows. They do not get the enforced gate
-below — that currently exists for Claude Code only.
+New thread, run `$mkit:init` once, then start another thread. Pi reads
+`AGENTS.md` directly. Both get the rules. Only Claude Code gets the real stop.
 
 </details>
 
-## The gate
+## How you know it worked
 
-mkit stops before editing files when a request touches one of six things:
+Never this:
 
-**numbers and thresholds · money · personal data · irreversible deletion ·
-third-party calls · permissions**
-
-The rule is simple: the agent decides when a mistake is cheap and easy to spot.
-You decide when a mistake could stay invisible to you. Changing a button colour
-asks you nothing.
-
-This is not a written promise. A small program **refuses the file edit** until
-the gate has run for your current request, and fails closed on every error path.
-Installing the plugin switches it on; you do not configure anything.
-
-In projects where mkit was never installed the gate stays out of the way and
-changes nothing.
-
-## Commands
-
-| Command | What it does |
-| --- | --- |
-| `/mkit:init` | Set up the documents, reading an existing codebase without redesigning it |
-| `/mkit:plan` | Talk a task through without touching code |
-| `/mkit:implement` | Build until you can test it yourself |
-| `/mkit:fix` | Reproduce the bug first, then fix it |
-| `/mkit:continue` | Pick up unfinished work from an earlier session |
-| `/mkit:ha` | Say the last thing again, differently |
-
-`/mkit:ha` matters most. People who do not understand tend to nod instead of
-asking. This makes "I do not understand" one keystroke.
-
-On Codex and Pi, just say what you want in plain language.
-
-## Documents
-
-| File | Answers |
-| --- | --- |
-| `spec.md` | What the product does, with status on every line |
-| `docs/architecture.md` | What owns what, and which dependencies are allowed |
-| `docs/decisions/` | Rules that bind every future task |
-| `docs/active/` | Work in progress, how far it got, what remains |
-| `docs/done/` | What was finished, and how it was proven |
-
-`spec.md` is the only one you have to read:
-
-```markdown
-- [x] Email sign-in     ✅ working · 2026-08-02
-- [ ] Google sign-in    ⏳ in progress · docs/active/google-login.md
-- [ ] Password reset    ⬜ not started
+```
+23 tests passed, coverage 87%
 ```
 
-## What the agent owes you
+Always this:
 
-You cannot see these failures, so the rules make the agent responsible for them:
-write the minimum, touch only what the request needs, keep the architecture the
-project already has, offer a simpler path before building, and say out loud what
-was never tested. Silence sounds like verification.
+```
+Open /sign-up. Click Submit 21 times.
+Attempt 21 must say "Try again in 1 minute."
+```
 
-It never deletes, resets, or force-pushes unless you ask for exactly that.
+You run it. You see it. That is the proof.
 
-## Rollback
+## Going back
 
-You do not need to know git. Checkpoints are saved before the agent stops to ask
-and after a task is accepted. Ask to go back and you get:
+You never need to learn git.
 
-```text
+```
 Return to which point?
 1. Before fixing the Checkout button — 10 minutes ago
 2. Before adding Google sign-in — yesterday
 ```
 
-No hashes, no branch names. Pick a number. It never sends your code anywhere
-without you asking.
+Pick a number. Your code is never sent anywhere unless you ask.
+
+## Talking to it
+
+| Say | It does |
+| --- | --- |
+| "plan X" | talks it through, changes nothing |
+| "build X" | builds until you can try it |
+| "this is broken" | reproduces it first, then fixes |
+| "where did we stop?" | picks up unfinished work |
+| "I don't understand" | says it again, differently |
+
+In Claude Code these are also `/mkit:plan`, `/mkit:implement`, `/mkit:fix`,
+`/mkit:continue`, `/mkit:ha`.
+
+`/mkit:ha` matters most. People who do not understand tend to nod. This makes
+saying so one keystroke.
+
+## What it writes down
+
+| File | Answers |
+| --- | --- |
+| `spec.md` | what your product does, and what actually works |
+| `docs/decisions/` | what you decided, so nobody asks twice |
+| `docs/active/` | what is half finished |
+| `docs/done/` | what is finished, and how it was proven |
+
+Only `spec.md` is for you:
+
+```
+- [x] Email sign-in    ✅ working · 2026-08-02
+- [ ] Google sign-in   ⏳ in progress
+- [ ] Password reset   ⬜ not started
+```
+
+## What the agent owes you
+
+You cannot see these, so the rules make it responsible for them.
+
+```
+  write the least that solves it
+  touch only what you asked about
+  say the simpler way before building
+  say out loud what was never tested
+  never delete or undo unless you asked for exactly that
+```
+
+Silence sounds like everything was checked. It is not.
 
 ## Built from
 
 - [`hoangnb24/repository-harness`](https://github.com/hoangnb24/repository-harness)
-  — authority gate, work classification, completion standard, `decision.md` structure
-- [`mattpocock/skills`](https://github.com/mattpocock/skills) — the `grilling` pattern
+- [`mattpocock/skills`](https://github.com/mattpocock/skills)
 
-Both MIT. [`NOTICE`](./NOTICE) records exactly what was inherited and what changed.
+Both MIT. [`NOTICE`](./NOTICE) says exactly what was taken and what changed.
 
 ## License
 

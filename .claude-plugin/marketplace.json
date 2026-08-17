@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "AI-agent harness workflow that preserves user decisions and project architecture",
-    "version": "1.3.0"
+    "version": "1.4.0"
   },
   "plugins": [
     {
       "name": "mkit",
       "source": "./",
       "description": "Prevents invented policy, preserves each repository's architecture, and proves results with steps the user can perform.",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "category": "productivity",
       "tags": ["harness", "non-technical", "vibe-coding", "plain-language"]
     }

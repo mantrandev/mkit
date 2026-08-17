@@ -39,6 +39,7 @@ to call is still only an instruction.
 - Treat `install.sh` as a distributor, not as a second source of workflow behavior.
 - Never copy rule text into `crates/mkit-gate/`; the rule sources stay in `core/`.
 - The ledger schema is enforced in the program, never by convention; free text must be refused rather than sanitised.
+- The ledger reader reports counts and totals only; it sets no threshold, states no conclusion, and writes nothing.
 - Every `mkit-gate` failure path fails closed, so an unusable state blocks edits rather than allowing them.
 - A trigger names the project through `MKIT_ROOT` and never lets the program infer it from the working directory.
 - A trigger may skip the gate only when the program is absent; it must never convert a refusal into success.

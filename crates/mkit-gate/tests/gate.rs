@@ -560,6 +560,139 @@ fn a_ledger_that_cannot_be_written_never_blocks_an_edit() {
     assert_eq!(lab.code(&["check"]), OK);
 }
 
+fn stdout_of(output: &Output) -> String {
+    String::from_utf8_lossy(&output.stdout).to_string()
+}
+
+#[test]
+fn studying_an_empty_ledger_says_so() {
+    let lab = Lab::new();
+    let output = lab.run(&["study"]);
+    assert_eq!(output.status.code().unwrap(), OK);
+    assert!(stdout_of(&output).contains("Nothing has been recorded yet"));
+}
+
+#[test]
+fn study_reports_what_the_ledger_holds() {
+    let lab = Lab::new();
+    for _ in 0..4 {
+        lab.run(&["turn"]);
+    }
+    lab.run(&["log", "--kind", "ha", "--after", "implement"]);
+    lab.run(&["log", "--kind", "ha", "--after", "implement"]);
+    lab.run(&["log", "--kind", "ha", "--after", "fix"]);
+    lab.run(&[
+        "log",
+        "--kind",
+        "rework",
+        "--after",
+        "implement",
+        "--round",
+        "4",
+    ]);
+    lab.run(&[
+        "log",
+        "--kind",
+        "rework",
+        "--after",
+        "implement",
+        "--round",
+        "2",
+    ]);
+    lab.run(&[
+        "log",
+        "--kind",
+        "collision",
+        "--tags",
+        "restraint,architecture",
+    ]);
+    lab.run(&["declare", "--touches", "money"]);
+    lab.run(&["declare", "--touches", "money,numbers"]);
+    lab.run(&["check"]);
+
+    let report = stdout_of(&lab.run(&["study"]));
+    assert!(report.contains("4 requests recorded"), "{report}");
+    assert!(
+        report.contains("implement") && report.contains("2 of 4 requests"),
+        "{report}"
+    );
+    assert!(report.contains("worst took 4 attempts"), "{report}");
+    assert!(report.contains("architecture + restraint"), "{report}");
+    assert!(report.contains("money"), "{report}");
+    assert!(report.contains("Counts only"), "{report}");
+}
+
+#[test]
+fn study_ranks_by_frequency_and_never_judges() {
+    let lab = Lab::new();
+    lab.run(&["turn"]);
+    lab.run(&["log", "--kind", "ha", "--after", "fix"]);
+    for _ in 0..3 {
+        lab.run(&["log", "--kind", "ha", "--after", "plan"]);
+    }
+    let report = stdout_of(&lab.run(&["study"]));
+    let plan = report.find("plan").unwrap();
+    let fix = report.find("fix").unwrap();
+    assert!(
+        plan < fix,
+        "the more frequent signal must come first:\n{report}"
+    );
+
+    for word in [
+        "should",
+        "recommend",
+        "severity",
+        "critical",
+        "warning",
+        "fix this",
+    ] {
+        assert!(
+            !report.to_lowercase().contains(word),
+            "study stated a conclusion using {word:?}:\n{report}"
+        );
+    }
+}
+
+#[test]
+fn study_survives_a_corrupted_ledger_and_writes_nothing() {
+    let lab = Lab::new();
+    lab.run(&["turn"]);
+    lab.run(&["log", "--kind", "ha", "--after", "plan"]);
+    let path = lab.root.join(".mkit/ledger.jsonl");
+    let mut body = fs::read_to_string(&path).unwrap();
+    body.push_str("not json at all\n{\"kind\":\n\n{}\n");
+    fs::write(&path, &body).unwrap();
+
+    let output = lab.run(&["study"]);
+    assert_eq!(output.status.code().unwrap(), OK);
+    assert!(stdout_of(&output).contains("plan"));
+    assert_eq!(
+        fs::read_to_string(&path).unwrap(),
+        body,
+        "study must not write"
+    );
+}
+
+#[test]
+fn study_outside_a_repository_does_not_fail() {
+    let outside = std::env::temp_dir().join(format!(
+        "mkit-gate-study-{:x}",
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    fs::create_dir_all(&outside).unwrap();
+    let output = Command::new(BIN)
+        .arg("study")
+        .current_dir(&outside)
+        .env_remove("MKIT_ROOT")
+        .output()
+        .unwrap();
+    let _ = fs::remove_dir_all(&outside);
+    assert_eq!(output.status.code().unwrap(), OK);
+}
+
 #[test]
 fn rule_text_is_not_copied_into_the_binary() {
     let source =
