@@ -295,7 +295,7 @@ fn check_with_payload(lab: &Lab, payload: &str) -> i32 {
     use std::io::Write;
     use std::process::Stdio;
     let mut child = Command::new(BIN)
-        .arg("check")
+        .args(["check", "--from-hook"])
         .env("MKIT_ROOT", &lab.root)
         .current_dir(&lab.root)
         .stdin(Stdio::piped())
@@ -562,6 +562,42 @@ fn a_ledger_that_cannot_be_written_never_blocks_an_edit() {
 
 fn stdout_of(output: &Output) -> String {
     String::from_utf8_lossy(&output.stdout).to_string()
+}
+
+#[test]
+fn check_never_waits_for_input() {
+    use std::process::Stdio;
+    use std::time::{Duration, Instant};
+
+    let lab = Lab::new();
+    lab.run(&["turn"]);
+
+    let mut child = Command::new(BIN)
+        .arg("check")
+        .env("MKIT_ROOT", &lab.root)
+        .current_dir(&lab.root)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+        .unwrap();
+
+    let held_open = child.stdin.take().unwrap();
+
+    let deadline = Instant::now() + Duration::from_secs(10);
+    let code = loop {
+        if let Some(status) = child.try_wait().unwrap() {
+            break status.code().unwrap();
+        }
+        if Instant::now() > deadline {
+            let _ = child.kill();
+            drop(held_open);
+            panic!("check waited for input that never came");
+        }
+        std::thread::sleep(Duration::from_millis(25));
+    };
+    drop(held_open);
+    assert_eq!(code, BLOCKED);
 }
 
 #[test]

@@ -65,7 +65,7 @@ fn usage(reason: &str) -> ExitCode {
     eprintln!("mkit-gate: {reason}");
     eprintln!("usage: mkit-gate turn");
     eprintln!("       mkit-gate declare --touches <none|item,item> [--decision <path>]");
-    eprintln!("       mkit-gate check");
+    eprintln!("       mkit-gate check [--from-hook]");
     eprintln!(
         "       mkit-gate log --kind <kind> [--after <command>] [--round <n>] [--tags <slug,slug>]"
     );
@@ -209,14 +209,16 @@ fn run_declare(rest: &[String]) -> ExitCode {
 }
 
 fn run_check(rest: &[String]) -> ExitCode {
-    if !rest.is_empty() {
-        return usage("check takes no arguments");
-    }
+    let from_hook = match rest.len() {
+        0 => false,
+        1 if rest[0] == "--from-hook" => true,
+        _ => return usage("check takes no arguments except --from-hook"),
+    };
     let root = match repo_root() {
         Ok(value) => value,
         Err(reason) => return blocked(&reason),
     };
-    if writes_a_decision(&root) {
+    if from_hook && writes_a_decision(&root) {
         return ExitCode::from(OK);
     }
     let dir = root.join(".mkit").join("gate");

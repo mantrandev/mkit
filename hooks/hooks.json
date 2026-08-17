@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "R=\"${CLAUDE_PROJECT_DIR:-.}\"; [ -x \"$R/.mkit/bin/mkit-gate\" ] || exit 0; MKIT_ROOT=\"$R\" exec \"$R/.mkit/bin/mkit-gate\" check"
+            "command": "R=\"${CLAUDE_PROJECT_DIR:-.}\"; [ -x \"$R/.mkit/bin/mkit-gate\" ] || exit 0; MKIT_ROOT=\"$R\" exec \"$R/.mkit/bin/mkit-gate\" check --from-hook"
           }
         ]
       }
