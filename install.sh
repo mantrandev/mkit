@@ -12,6 +12,35 @@ die() { printf 'mkit: %s\n' "$*" >&2; exit 1; }
 TARGET="$(cd "$TARGET" && pwd)"
 
 command -v git >/dev/null 2>&1 || die "git is required"
+command -v curl >/dev/null 2>&1 || die "curl is required"
+
+if command -v sha256sum >/dev/null 2>&1; then
+  digest_of() { sha256sum "$1" | cut -d' ' -f1; }
+elif command -v shasum >/dev/null 2>&1; then
+  digest_of() { shasum -a 256 "$1" | cut -d' ' -f1; }
+else
+  die "sha256sum or shasum is required to verify the download"
+fi
+
+case "$(uname -s)" in
+  Darwin)
+    case "$(uname -m)" in
+      arm64) GATE_TARGET=aarch64-apple-darwin ;;
+      x86_64) GATE_TARGET=x86_64-apple-darwin ;;
+      *) die "unsupported macOS architecture: $(uname -m)" ;;
+    esac
+    ;;
+  Linux)
+    case "$(uname -m)" in
+      x86_64) GATE_TARGET=x86_64-unknown-linux-gnu ;;
+      aarch64 | arm64) GATE_TARGET=aarch64-unknown-linux-gnu ;;
+      *) die "unsupported Linux architecture: $(uname -m)" ;;
+    esac
+    ;;
+  *)
+    die "unsupported system: $(uname -s). Install through the Claude Code or Codex plugin instead."
+    ;;
+esac
 
 if [ -d "$TARGET/.git" ]; then
   IN_GIT=yes
@@ -83,6 +112,36 @@ for dir in "$SRC/skills"/*/; do
 done
 say "mkit: installed $count workflows into .mkit/workflows"
 
+VERSION="$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$SRC/.claude-plugin/plugin.json" | head -1)"
+[ -n "$VERSION" ] || die "cannot read the mkit version"
+
+ASSET="mkit-gate-$GATE_TARGET"
+BASE="https://github.com/mantrandev/mkit/releases/download/v$VERSION"
+STAGE="$SRC/gate"
+mkdir -p "$STAGE"
+
+say "mkit: downloading the gate for $GATE_TARGET…"
+curl -fsSL -o "$STAGE/$ASSET" "$BASE/$ASSET" \
+  || die "no build for $GATE_TARGET in release v$VERSION — nothing was installed"
+curl -fsSL -o "$STAGE/SHA256SUMS" "$BASE/SHA256SUMS" \
+  || die "release v$VERSION has no checksum file — nothing was installed"
+
+EXPECTED="$(awk -v name="$ASSET" '$2 == name || $2 == "*" name { print $1 }' "$STAGE/SHA256SUMS" | head -1)"
+[ -n "$EXPECTED" ] || die "$ASSET is not listed in the release checksums — nothing was installed"
+
+ACTUAL="$(digest_of "$STAGE/$ASSET")"
+if [ "$ACTUAL" != "$EXPECTED" ]; then
+  die "the downloaded gate does not match its checksum — nothing was installed"
+fi
+
+mkdir -p "$TARGET/.mkit/bin"
+cp "$STAGE/$ASSET" "$TARGET/.mkit/bin/mkit-gate"
+chmod +x "$TARGET/.mkit/bin/mkit-gate"
+say "mkit: verified and installed the gate into .mkit/bin"
+
+mkdir -p "$TARGET/.mkit/hooks"
+cp "$SRC/hooks/claude-code.json" "$TARGET/.mkit/hooks/claude-code.json"
+
 say ""
 say "Done. Talk to your agent in plain language:"
 say ""
@@ -91,6 +150,13 @@ say "  'build X for me'        implement it"
 say "  'this is broken'        fix a bug"
 say "  'where did we stop?'    resume unfinished work"
 say "  'I do not understand'   explain it differently"
+say ""
+say "One step is left, and only you can do it. The gate is installed but not armed."
+say "In Claude Code, merge this file into .claude/settings.json:"
+say ""
+say "  .mkit/hooks/claude-code.json"
+say ""
+say "Until you do, the agent can still change files without answering your questions."
 say ""
 say "For slash commands in Claude Code, install the plugin:"
 say "  /plugin marketplace add mantrandev/mkit"

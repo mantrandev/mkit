@@ -291,6 +291,70 @@ fn a_directory_outside_any_repository_blocks() {
     assert_eq!(output.status.code().unwrap(), BLOCKED);
 }
 
+fn check_with_payload(lab: &Lab, payload: &str) -> i32 {
+    use std::io::Write;
+    use std::process::Stdio;
+    let mut child = Command::new(BIN)
+        .arg("check")
+        .env("MKIT_ROOT", &lab.root)
+        .current_dir(&lab.root)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+        .unwrap();
+    child
+        .stdin
+        .as_mut()
+        .unwrap()
+        .write_all(payload.as_bytes())
+        .unwrap();
+    child.wait().unwrap().code().unwrap()
+}
+
+#[test]
+fn recording_a_decision_is_never_blocked() {
+    let lab = Lab::new();
+    lab.run(&["turn"]);
+    assert_eq!(lab.code(&["check"]), BLOCKED);
+
+    let allowed = format!(
+        r#"{{"tool_name":"Write","tool_input":{{"file_path":"{}/docs/decisions/0013-new.md"}}}}"#,
+        lab.root.display()
+    );
+    assert_eq!(check_with_payload(&lab, &allowed), OK);
+
+    assert_eq!(
+        check_with_payload(
+            &lab,
+            r#"{"tool_input":{"file_path":"docs/decisions/0013-new.md"}}"#
+        ),
+        OK
+    );
+}
+
+#[test]
+fn the_decision_exemption_cannot_be_abused() {
+    let lab = Lab::new();
+    lab.run(&["turn"]);
+    for payload in [
+        r#"{"tool_input":{"file_path":"docs/decisions/../../etc/passwd"}}"#,
+        r#"{"tool_input":{"file_path":"docs/decisions/evil.rs"}}"#,
+        r#"{"tool_input":{"file_path":"src/main.rs"}}"#,
+        r#"{"tool_input":{"file_path":"docs/decisionsX/0013.md"}}"#,
+        r#"{"tool_input":{"path":"docs/decisions/0013.md"}}"#,
+        r#"{"tool_input":{"file_path":"#,
+        "not json at all",
+        "",
+    ] {
+        assert_eq!(
+            check_with_payload(&lab, payload),
+            BLOCKED,
+            "payload {payload:?} slipped through"
+        );
+    }
+}
+
 #[test]
 fn opening_a_request_outside_a_repository_never_blocks_the_user() {
     let outside = std::env::temp_dir().join(format!(

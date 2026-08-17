@@ -27,6 +27,7 @@ to call is still only an instruction.
 | `.codex-plugin/` and `.claude-plugin/` | Client discovery and release metadata | Source skills |
 | `crates/mkit-gate/` | Request lifecycle and the refusal to edit files before the gate runs | Nothing inside mkit |
 | `hooks/` | Per-agent triggers that invoke `mkit-gate` at the tool layer | `crates/mkit-gate/` |
+| `.github/workflows/release.yml` | Platform builds and their published checksums | `crates/mkit-gate/` |
 | `docs/` and `spec.md` | Current product truth, architecture, work, and rationale | Source behavior |
 
 ## Dependency rules
@@ -43,6 +44,8 @@ to call is still only an instruction.
 
 - Plugin install → client manifest → source skill → `mkit:init` → project-local rules and records
 - Shell install → `install.sh` → core rule and templates plus source skills → target repository
+- Tag push → release workflow → five platform builds plus `SHA256SUMS` → `install.sh` download and verify → `.mkit/bin/mkit-gate`
+- User prompt → agent trigger → `mkit-gate turn` → gate declaration → `mkit-gate check` permits or refuses the edit
 - Source behavior change → validation → client version bump → plugin update
 
 ## Verification

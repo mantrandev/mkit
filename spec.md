@@ -46,8 +46,10 @@ verified with executable or observable evidence; written code alone does not cou
 ## Not started
 
 - [x] `mkit-gate` — refuses file edits until the authority gate has run for the current request, and fails closed on every error path — ✅ working · 2026-08-17
-- [ ] `mkit-gate` shipped by `install.sh` as a verified platform build — ⬜ not started
-- [ ] `mkit-gate` triggers for Codex and Pi — ⬜ not started
+- [ ] `mkit-gate` shipped by `install.sh` as a checksum-verified platform build — ⏳ in progress · release pipeline and installer written, no release has produced a build yet
+- [ ] Installer arms the Claude Code trigger instead of asking the user to do it — ⬜ not started
+- [ ] `mkit-gate` trigger for Codex — ⬜ not started · Codex has a hook system but its configuration format could not be confirmed
+- [ ] `mkit-gate` trigger for Pi — ⬜ not started
 - [ ] Hook that blocks dangerous git commands, derived from `git-guardrails-claude-code` — ⬜ not started
 - [ ] `handoff` — compress the conversation into `docs/active/` — ⬜ not started
 - [ ] `to-questionnaire` — route decisions outside the user's authority to another person — ⬜ not started

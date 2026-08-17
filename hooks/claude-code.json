@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "mkit-gate turn"
+            "command": ".mkit/bin/mkit-gate turn || true"
           }
         ]
       }
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "mkit-gate check"
+            "command": ".mkit/bin/mkit-gate check"
           }
         ]
       }

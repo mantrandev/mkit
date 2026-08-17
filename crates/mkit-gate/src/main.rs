@@ -1,5 +1,6 @@
 use std::env;
 use std::fs;
+use std::io::{IsTerminal, Read};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -152,10 +153,14 @@ fn run_check(rest: &[String]) -> ExitCode {
     if !rest.is_empty() {
         return usage("check takes no arguments");
     }
-    let dir = match gate_dir() {
+    let root = match repo_root() {
         Ok(value) => value,
         Err(reason) => return blocked(&reason),
     };
+    if writes_a_decision(&root) {
+        return ExitCode::from(OK);
+    }
+    let dir = root.join(".mkit").join("gate");
     let turn = match fs::read_to_string(dir.join("current")) {
         Ok(value) => value.trim().to_string(),
         Err(_) => return blocked("no request is open. Refusing to change files"),
@@ -178,6 +183,55 @@ fn run_check(rest: &[String]) -> ExitCode {
         }
         None => blocked("the gate record is unreadable. Refusing to change files"),
     }
+}
+
+fn writes_a_decision(root: &Path) -> bool {
+    let mut payload = String::new();
+    if std::io::stdin().is_terminal() {
+        return false;
+    }
+    if std::io::stdin().read_to_string(&mut payload).is_err() {
+        return false;
+    }
+    let target = match json_string(&payload, "file_path") {
+        Some(value) => value,
+        None => return false,
+    };
+    let candidate = if Path::new(&target).is_absolute() {
+        PathBuf::from(&target)
+    } else {
+        root.join(&target)
+    };
+    let decisions = root.join("docs").join("decisions");
+    candidate.starts_with(&decisions)
+        && !target.contains("..")
+        && candidate.extension().and_then(|value| value.to_str()) == Some("md")
+}
+
+fn json_string(body: &str, key: &str) -> Option<String> {
+    let needle = format!("\"{key}\"");
+    let after_key = &body[body.find(&needle)? + needle.len()..];
+    let after_colon = &after_key[after_key.find(':')? + 1..];
+    let start = after_colon.find('"')? + 1;
+    let bytes = after_colon.as_bytes();
+    let mut value = String::new();
+    let mut index = start;
+    while index < bytes.len() {
+        match bytes[index] {
+            b'"' => return Some(value),
+            b'\\' => {
+                index += 1;
+                match bytes.get(index)? {
+                    b'n' => value.push('\n'),
+                    b't' => value.push('\t'),
+                    other => value.push(*other as char),
+                }
+            }
+            other => value.push(other as char),
+        }
+        index += 1;
+    }
+    None
 }
 
 fn parse_items(raw: &str) -> Result<Vec<String>, String> {

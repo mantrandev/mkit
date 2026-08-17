@@ -127,6 +127,21 @@ These six are the floor, not the ceiling. While working, also stop when:
 The gate runs on **every command that edits files**. No command disables it. A
 user who picks the wrong command loses a few questions, not the guardrail.
 
+When `.mkit/bin/mkit-gate` exists, this repository enforces the gate mechanically
+and file edits are refused until you record its result for the current request:
+
+```
+.mkit/bin/mkit-gate declare --touches none
+.mkit/bin/mkit-gate declare --touches money,personal-data --decision docs/decisions/0004-refunds.md
+```
+
+Declare `none` only when the request touches none of the six. When it touches
+any of them, name the decision that settles it; if no such decision exists, the
+command refuses and you must ask the user first. Writing a file into
+`docs/decisions/` is always permitted, so a decision can be recorded before it is
+named. Each new user request clears the previous result, so declare once per
+request, never once per session.
+
 ### Stopping mid-work
 
 When a question arises after files are already changed:
