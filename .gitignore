@@ -1,3 +1,5 @@
-.mkit/
+.mkit/workflows/
+.mkit/bin/
+.mkit/gate/
 .DS_Store
 target/

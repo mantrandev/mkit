@@ -1,0 +1,6 @@
+{"ts":1786952713,"mkit":"1.1.0","agent":"unknown","kind":"request"}
+{"ts":1786952713,"mkit":"1.1.0","agent":"unknown","kind":"gate","decision":"0014","touches":["personal-data"]}
+{"ts":1786952713,"mkit":"1.1.0","agent":"unknown","kind":"rework","after":"implement","round":2}
+{"ts":1786952849,"mkit":"1.1.0","agent":"unknown","kind":"request"}
+{"ts":1786952898,"mkit":"1.1.0","agent":"unknown","kind":"request"}
+{"ts":1786952944,"mkit":"1.1.0","agent":"unknown","kind":"gate","decision":"0014","touches":["personal-data"]}
