@@ -41,7 +41,8 @@ verified with executable or observable evidence; written code alone does not cou
 - [x] Codex — `codex plugin marketplace add` plus `codex plugin add` — ✅ working · 2026-08-14
 - [ ] Install the marketplace directly from GitHub at `mantrandev/mkit` — ⬜ not tested
 - [ ] Run on Pi — ⬜ not tested
-- [ ] Run with a non-technical user — ⬜ not tested
+- [x] Rules, workflows, and records used without reading code — ✅ working · 2026-08-17 · the author worked blind across two projects
+- [ ] The compiled gate used without reading code — ⬜ not tested · the gate was not installed in either project
 
 ## Not started
 
