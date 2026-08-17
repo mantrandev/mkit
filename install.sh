@@ -82,6 +82,29 @@ install_block() {
   fi
 }
 
+VERSION="$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$SRC/.claude-plugin/plugin.json" | head -1)"
+[ -n "$VERSION" ] || die "cannot read the mkit version"
+
+ASSET="mkit-gate-${GATE_TARGET}"
+BASE="https://github.com/mantrandev/mkit/releases/download/v${VERSION}"
+STAGE="$SRC/gate"
+mkdir -p "$STAGE"
+
+say "mkit: downloading the gate for ${GATE_TARGET}"
+curl -fsSL -o "$STAGE/$ASSET" "$BASE/$ASSET" \
+  || die "release v${VERSION} has no build for ${GATE_TARGET} - nothing was installed"
+curl -fsSL -o "$STAGE/SHA256SUMS" "$BASE/SHA256SUMS" \
+  || die "release v${VERSION} has no checksum file - nothing was installed"
+
+EXPECTED="$(awk -v name="$ASSET" '$2 == name || $2 == "*" name { print $1 }' "$STAGE/SHA256SUMS" | head -1)"
+[ -n "$EXPECTED" ] || die "${ASSET} is not listed in the release checksums - nothing was installed"
+
+ACTUAL="$(digest_of "$STAGE/$ASSET")"
+if [ "$ACTUAL" != "$EXPECTED" ]; then
+  die "the downloaded gate does not match its checksum - nothing was installed"
+fi
+say "mkit: verified the gate download"
+
 mkdir -p "$TARGET/docs/decisions" "$TARGET/docs/active" "$TARGET/docs/done"
 say "mkit: created docs/decisions, docs/active, docs/done"
 
@@ -111,28 +134,6 @@ for dir in "$SRC/skills"/*/; do
   count=$((count + 1))
 done
 say "mkit: installed $count workflows into .mkit/workflows"
-
-VERSION="$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$SRC/.claude-plugin/plugin.json" | head -1)"
-[ -n "$VERSION" ] || die "cannot read the mkit version"
-
-ASSET="mkit-gate-$GATE_TARGET"
-BASE="https://github.com/mantrandev/mkit/releases/download/v$VERSION"
-STAGE="$SRC/gate"
-mkdir -p "$STAGE"
-
-say "mkit: downloading the gate for $GATE_TARGET…"
-curl -fsSL -o "$STAGE/$ASSET" "$BASE/$ASSET" \
-  || die "no build for $GATE_TARGET in release v$VERSION — nothing was installed"
-curl -fsSL -o "$STAGE/SHA256SUMS" "$BASE/SHA256SUMS" \
-  || die "release v$VERSION has no checksum file — nothing was installed"
-
-EXPECTED="$(awk -v name="$ASSET" '$2 == name || $2 == "*" name { print $1 }' "$STAGE/SHA256SUMS" | head -1)"
-[ -n "$EXPECTED" ] || die "$ASSET is not listed in the release checksums — nothing was installed"
-
-ACTUAL="$(digest_of "$STAGE/$ASSET")"
-if [ "$ACTUAL" != "$EXPECTED" ]; then
-  die "the downloaded gate does not match its checksum — nothing was installed"
-fi
 
 mkdir -p "$TARGET/.mkit/bin"
 cp "$STAGE/$ASSET" "$TARGET/.mkit/bin/mkit-gate"
