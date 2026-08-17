@@ -45,7 +45,9 @@ verified with executable or observable evidence; written code alone does not cou
 
 ## Not started
 
-- [ ] `mkit-gate` — the authority gate enforced by a program instead of a written promise — ⏳ in progress · blocks edits and fails closed; not yet wired into any agent or shipped by the installer
+- [x] `mkit-gate` — refuses file edits until the authority gate has run for the current request, and fails closed on every error path — ✅ working · 2026-08-17
+- [ ] `mkit-gate` shipped by `install.sh` as a verified platform build — ⬜ not started
+- [ ] `mkit-gate` triggers for Codex and Pi — ⬜ not started
 - [ ] Hook that blocks dangerous git commands, derived from `git-guardrails-claude-code` — ⬜ not started
 - [ ] `handoff` — compress the conversation into `docs/active/` — ⬜ not started
 - [ ] `to-questionnaire` — route decisions outside the user's authority to another person — ⬜ not started

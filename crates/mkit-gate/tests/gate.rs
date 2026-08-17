@@ -292,6 +292,26 @@ fn a_directory_outside_any_repository_blocks() {
 }
 
 #[test]
+fn opening_a_request_outside_a_repository_never_blocks_the_user() {
+    let outside = std::env::temp_dir().join(format!(
+        "mkit-gate-turn-{:x}",
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    fs::create_dir_all(&outside).unwrap();
+    let output = Command::new(BIN)
+        .arg("turn")
+        .current_dir(&outside)
+        .env_remove("MKIT_ROOT")
+        .output()
+        .unwrap();
+    let _ = fs::remove_dir_all(&outside);
+    assert_eq!(output.status.code().unwrap(), OK);
+}
+
+#[test]
 fn the_gate_is_found_from_a_nested_directory() {
     let lab = Lab::new();
     lab.run(&["turn"]);

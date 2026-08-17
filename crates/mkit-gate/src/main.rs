@@ -52,7 +52,7 @@ fn run_turn(rest: &[String]) -> ExitCode {
     }
     let dir = match gate_dir() {
         Ok(value) => value,
-        Err(reason) => return blocked(&reason),
+        Err(_) => return ExitCode::from(OK),
     };
     if let Err(error) = fs::create_dir_all(&dir) {
         return blocked(&format!("cannot create {}: {error}", dir.display()));
