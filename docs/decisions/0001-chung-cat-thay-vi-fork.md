@@ -4,7 +4,7 @@ Ngày: 2026-08-14
 
 ## Trạng thái
 
-Accepted
+Superseded by 0012
 
 ## Vì sao phải quyết
 

@@ -45,6 +45,7 @@ verified with executable or observable evidence; written code alone does not cou
 
 ## Not started
 
+- [ ] `mkit-gate` — the authority gate enforced by a program instead of a written promise — ⬜ not started
 - [ ] Hook that blocks dangerous git commands, derived from `git-guardrails-claude-code` — ⬜ not started
 - [ ] `handoff` — compress the conversation into `docs/active/` — ⬜ not started
 - [ ] `to-questionnaire` — route decisions outside the user's authority to another person — ⬜ not started
