@@ -53,8 +53,8 @@ Then, in your project:
 curl -fsSL https://raw.githubusercontent.com/mantrandev/mkit/main/install.sh | bash
 ```
 
-That writes the rules, the documents, and the gate program. It prints one last
-step you have to do yourself — see [The gate](#the-gate).
+The plugin gives you the commands and switches the gate on. The script writes the
+rules, the documents, and the gate program into your project. You need both.
 
 <details>
 <summary>Codex and Pi</summary>
@@ -83,13 +83,12 @@ The rule is simple: the agent decides when a mistake is cheap and easy to spot.
 You decide when a mistake could stay invisible to you. Changing a button colour
 asks you nothing.
 
-This is not a written promise. `install.sh` installs a small program that
-**refuses the file edit** until the gate has run for your current request, and
-fails closed on every error path.
+This is not a written promise. A small program **refuses the file edit** until
+the gate has run for your current request, and fails closed on every error path.
+Installing the plugin switches it on; you do not configure anything.
 
-Arming it is one manual step, and only you can do it — merge
-`.mkit/hooks/claude-code.json` into `.claude/settings.json`. Until you do, the
-agent can still change files without asking you anything.
+In projects where mkit was never installed the gate stays out of the way and
+changes nothing.
 
 ## Commands
 

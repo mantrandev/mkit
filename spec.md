@@ -51,7 +51,7 @@ verified with executable or observable evidence; written code alone does not cou
 - [x] `mkit-gate` shipped by `install.sh` as a checksum-verified platform build — ✅ working · 2026-08-17
 - [x] The ledger records what happened in counts and labels, and refuses anything the user typed — ✅ working · 2026-08-17
 - [ ] A command that reads the ledger and proposes rule changes — ⬜ not started
-- [ ] Installer arms the Claude Code trigger instead of asking the user to do it — ⬜ not started
+- [x] Installing the Claude Code plugin switches the gate on, with no configuration by the user — ✅ working · 2026-08-17
 - [ ] `mkit-gate` trigger for Codex — ⬜ not started · Codex has a hook system but its configuration format could not be confirmed
 - [ ] `mkit-gate` trigger for Pi — ⬜ not started
 - [ ] Hook that blocks dangerous git commands, derived from `git-guardrails-claude-code` — ⬜ not started

@@ -26,7 +26,7 @@ to call is still only an instruction.
 | `install.sh` | Non-plugin installation and refresh | `core/`, `skills/` |
 | `.codex-plugin/` and `.claude-plugin/` | Client discovery and release metadata | Source skills |
 | `crates/mkit-gate/` | Request lifecycle, the refusal to edit files before the gate runs, and the ledger schema | Nothing inside mkit |
-| `hooks/` | Per-agent triggers that invoke `mkit-gate` at the tool layer | `crates/mkit-gate/` |
+| `hooks/hooks.json` | Per-agent triggers that invoke `mkit-gate` at the tool layer, shipped by the Claude Code plugin | `crates/mkit-gate/` |
 | `.github/workflows/release.yml` | Platform builds and their published checksums | `crates/mkit-gate/` |
 | `docs/` and `spec.md` | Current product truth, architecture, work, and rationale | Source behavior |
 
@@ -40,6 +40,8 @@ to call is still only an instruction.
 - Never copy rule text into `crates/mkit-gate/`; the rule sources stay in `core/`.
 - The ledger schema is enforced in the program, never by convention; free text must be refused rather than sanitised.
 - Every `mkit-gate` failure path fails closed, so an unusable state blocks edits rather than allowing them.
+- A trigger names the project through `MKIT_ROOT` and never lets the program infer it from the working directory.
+- A trigger may skip the gate only when the program is absent; it must never convert a refusal into success.
 
 ## Cross-boundary flows
 
