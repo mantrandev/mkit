@@ -1,0 +1,9 @@
+[package]
+name = "mkit-gate"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Blocks file edits until the mkit authority gate has run for the current request."
+repository = "https://github.com/mantrandev/mkit"
+
+[dependencies]
