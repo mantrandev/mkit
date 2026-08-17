@@ -158,6 +158,23 @@ command refuses and you must ask the user first. Writing a file into
 named. Each new user request clears the previous result, so declare once per
 request, never once per session.
 
+The same program records what happened, so mkit's own rules can be corrected
+from evidence instead of guesswork:
+
+```
+.mkit/bin/mkit-gate log --kind ha --after implement
+.mkit/bin/mkit-gate log --kind rework --after fix --round 2
+.mkit/bin/mkit-gate log --kind collision --tags restraint,architecture
+```
+
+Record `ha` when the user asks for the same thing explained differently,
+`rework` when they say the result is not what they wanted, and `collision` when
+two rules in this block cannot both be followed. Recording never blocks work and
+never fails a task.
+
+It stores counts and labels only. It refuses what the user typed, file contents,
+and file paths, so nothing private can reach it even by mistake.
+
 ### Stopping mid-work
 
 When a question arises after files are already changed:

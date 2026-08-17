@@ -46,7 +46,9 @@ verified with executable or observable evidence; written code alone does not cou
 ## Not started
 
 - [x] `mkit-gate` — refuses file edits until the authority gate has run for the current request, and fails closed on every error path — ✅ working · 2026-08-17
-- [ ] `mkit-gate` shipped by `install.sh` as a checksum-verified platform build — ⏳ in progress · release pipeline and installer written, no release has produced a build yet
+- [x] `mkit-gate` shipped by `install.sh` as a checksum-verified platform build — ✅ working · 2026-08-17
+- [x] The ledger records what happened in counts and labels, and refuses anything the user typed — ✅ working · 2026-08-17
+- [ ] A command that reads the ledger and proposes rule changes — ⬜ not started
 - [ ] Installer arms the Claude Code trigger instead of asking the user to do it — ⬜ not started
 - [ ] `mkit-gate` trigger for Codex — ⬜ not started · Codex has a hook system but its configuration format could not be confirmed
 - [ ] `mkit-gate` trigger for Pi — ⬜ not started

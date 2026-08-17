@@ -25,7 +25,7 @@ to call is still only an instruction.
 | `core/templates/` | Templates distributed to target repositories | Document contracts in the agent rules |
 | `install.sh` | Non-plugin installation and refresh | `core/`, `skills/` |
 | `.codex-plugin/` and `.claude-plugin/` | Client discovery and release metadata | Source skills |
-| `crates/mkit-gate/` | Request lifecycle and the refusal to edit files before the gate runs | Nothing inside mkit |
+| `crates/mkit-gate/` | Request lifecycle, the refusal to edit files before the gate runs, and the ledger schema | Nothing inside mkit |
 | `hooks/` | Per-agent triggers that invoke `mkit-gate` at the tool layer | `crates/mkit-gate/` |
 | `.github/workflows/release.yml` | Platform builds and their published checksums | `crates/mkit-gate/` |
 | `docs/` and `spec.md` | Current product truth, architecture, work, and rationale | Source behavior |
@@ -38,6 +38,7 @@ to call is still only an instruction.
 - Keep plugin manifests pointed at source skills; never create client-specific workflow forks.
 - Treat `install.sh` as a distributor, not as a second source of workflow behavior.
 - Never copy rule text into `crates/mkit-gate/`; the rule sources stay in `core/`.
+- The ledger schema is enforced in the program, never by convention; free text must be refused rather than sanitised.
 - Every `mkit-gate` failure path fails closed, so an unusable state blocks edits rather than allowing them.
 
 ## Cross-boundary flows

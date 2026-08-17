@@ -391,6 +391,147 @@ fn the_gate_is_found_from_a_nested_directory() {
     assert_eq!(output.status.code().unwrap(), OK);
 }
 
+impl Lab {
+    fn ledger(&self) -> String {
+        fs::read_to_string(self.root.join(".mkit/ledger.jsonl")).unwrap_or_default()
+    }
+}
+
+#[test]
+fn the_gate_records_what_happened() {
+    let lab = Lab::new();
+    lab.run(&["turn"]);
+    assert!(lab.ledger().contains("\"kind\":\"request\""));
+
+    lab.run(&["declare", "--touches", "money"]);
+    assert!(lab.ledger().contains("\"kind\":\"refused\""));
+    assert!(lab.ledger().contains("\"touches\":[\"money\"]"));
+
+    lab.run(&[
+        "declare",
+        "--touches",
+        "money",
+        "--decision",
+        "docs/decisions/0001-x.md",
+    ]);
+    let ledger = lab.ledger();
+    assert!(ledger.contains("\"kind\":\"gate\""));
+    assert!(ledger.contains("\"decision\":\"0001\""));
+    assert!(ledger.contains("\"mkit\":\""));
+}
+
+#[test]
+fn a_blocked_request_is_recorded_once_however_often_it_retries() {
+    let lab = Lab::new();
+    lab.run(&["turn"]);
+    for _ in 0..10 {
+        assert_eq!(lab.code(&["check"]), BLOCKED);
+    }
+    let blocks = lab.ledger().matches("\"kind\":\"blocked\"").count();
+    assert_eq!(blocks, 1, "one refusal per request, not one per attempt");
+
+    lab.run(&["turn"]);
+    assert_eq!(lab.code(&["check"]), BLOCKED);
+    assert_eq!(lab.ledger().matches("\"kind\":\"blocked\"").count(), 2);
+}
+
+#[test]
+fn agents_can_record_their_own_signals() {
+    let lab = Lab::new();
+    assert_eq!(
+        lab.code(&["log", "--kind", "ha", "--after", "implement"]),
+        OK
+    );
+    assert_eq!(
+        lab.code(&["log", "--kind", "rework", "--after", "fix", "--round", "3"]),
+        OK
+    );
+    assert_eq!(
+        lab.code(&[
+            "log",
+            "--kind",
+            "collision",
+            "--tags",
+            "restraint,architecture"
+        ]),
+        OK
+    );
+    let ledger = lab.ledger();
+    assert!(ledger.contains("\"kind\":\"ha\",\"after\":\"implement\""));
+    assert!(ledger.contains("\"round\":3"));
+    assert!(ledger.contains("\"tags\":[\"restraint\",\"architecture\"]"));
+}
+
+#[test]
+fn the_ledger_refuses_prose_and_secrets() {
+    let lab = Lab::new();
+    let cases: Vec<Vec<&str>> = vec![
+        vec!["log", "--kind", "the user asked about refunds"],
+        vec![
+            "log",
+            "--kind",
+            "ha",
+            "--after",
+            "please fix my billing code",
+        ],
+        vec!["log", "--kind", "ha", "--tags", "sk-proj-8Kd9SECRETkey"],
+        vec!["log", "--kind", "ha", "--tags", "hello world"],
+        vec!["log", "--kind", "ha", "--tags", "user@example.com"],
+        vec!["log", "--kind", "ha", "--tags", "src/billing/charge.ts"],
+        vec!["log", "--kind", "ha", "--tags", "\"quoted\""],
+        vec!["log", "--kind", "ha", "--tags", "a,b,c,d,e,f,g,h,i"],
+        vec!["log", "--kind", "ha", "--round", "many"],
+        vec!["log", "--after", "implement"],
+        vec!["log"],
+    ];
+    for case in cases {
+        assert_eq!(lab.code(&case), USAGE, "input {case:?} reached the ledger");
+    }
+    assert_eq!(lab.ledger(), "", "nothing should have been written");
+}
+
+#[test]
+fn every_recorded_line_is_machine_shaped() {
+    let lab = Lab::new();
+    lab.run(&["turn"]);
+    lab.run(&[
+        "declare",
+        "--touches",
+        "personal-data,money",
+        "--decision",
+        "docs/decisions/0001-x.md",
+    ]);
+    lab.run(&["log", "--kind", "rework", "--after", "plan", "--round", "2"]);
+
+    for line in lab.ledger().lines() {
+        assert!(
+            line.starts_with('{') && line.ends_with('}'),
+            "not one object: {line}"
+        );
+        assert!(line.len() <= 1024, "line too long to append atomically");
+        assert!(
+            !line.chars().any(|c| c.is_uppercase()),
+            "an identifier with uppercase reached the ledger: {line}"
+        );
+        assert!(
+            !line.contains(", ") && !line.contains(": "),
+            "prose spacing reached the ledger: {line}"
+        );
+    }
+}
+
+#[test]
+fn a_ledger_that_cannot_be_written_never_blocks_an_edit() {
+    let lab = Lab::new();
+    lab.run(&["turn"]);
+    lab.run(&["declare", "--touches", "none"]);
+    fs::remove_file(lab.root.join(".mkit/ledger.jsonl")).unwrap();
+    fs::create_dir(lab.root.join(".mkit/ledger.jsonl")).unwrap();
+    assert_eq!(lab.code(&["turn"]), OK);
+    assert_eq!(lab.code(&["declare", "--touches", "none"]), OK);
+    assert_eq!(lab.code(&["check"]), OK);
+}
+
 #[test]
 fn rule_text_is_not_copied_into_the_binary() {
     let source =

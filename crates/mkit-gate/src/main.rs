@@ -1,6 +1,6 @@
 use std::env;
 use std::fs;
-use std::io::{IsTerminal, Read};
+use std::io::{IsTerminal, Read, Write};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -14,6 +14,32 @@ const GATE_ITEMS: [&str; 6] = [
     "permissions",
 ];
 
+const EVENT_KINDS: [&str; 7] = [
+    "request",
+    "gate",
+    "refused",
+    "blocked",
+    "ha",
+    "rework",
+    "collision",
+];
+
+const COMMANDS: [&str; 7] = [
+    "plan",
+    "implement",
+    "fix",
+    "continue",
+    "grill-me",
+    "ha",
+    "init",
+];
+
+const AGENTS: [&str; 4] = ["claude", "codex", "pi", "unknown"];
+
+const MAX_LINE: usize = 1024;
+const MAX_TAGS: usize = 8;
+const MAX_SLUG: usize = 32;
+
 const OK: u8 = 0;
 const BLOCKED: u8 = 2;
 const USAGE: u8 = 64;
@@ -24,12 +50,13 @@ fn main() -> ExitCode {
         Some("turn") => run_turn(&args[1..]),
         Some("declare") => run_declare(&args[1..]),
         Some("check") => run_check(&args[1..]),
+        Some("log") => run_log(&args[1..]),
         Some("--version") | Some("-V") => {
             println!("mkit-gate {}", env!("CARGO_PKG_VERSION"));
             ExitCode::from(OK)
         }
         Some(other) => usage(&format!("unknown command '{other}'")),
-        None => usage("expected one of: turn, declare, check"),
+        None => usage("expected one of: turn, declare, check, log"),
     }
 }
 
@@ -38,7 +65,12 @@ fn usage(reason: &str) -> ExitCode {
     eprintln!("usage: mkit-gate turn");
     eprintln!("       mkit-gate declare --touches <none|item,item> [--decision <path>]");
     eprintln!("       mkit-gate check");
+    eprintln!(
+        "       mkit-gate log --kind <kind> [--after <command>] [--round <n>] [--tags <slug,slug>]"
+    );
     eprintln!("items: {}", GATE_ITEMS.join(", "));
+    eprintln!("kinds: {}", EVENT_KINDS.join(", "));
+    eprintln!("commands: {}", COMMANDS.join(", "));
     ExitCode::from(USAGE)
 }
 
@@ -51,10 +83,11 @@ fn run_turn(rest: &[String]) -> ExitCode {
     if !rest.is_empty() {
         return usage("turn takes no arguments");
     }
-    let dir = match gate_dir() {
+    let root = match repo_root() {
         Ok(value) => value,
         Err(_) => return ExitCode::from(OK),
     };
+    let dir = root.join(".mkit").join("gate");
     if let Err(error) = fs::create_dir_all(&dir) {
         return blocked(&format!("cannot create {}: {error}", dir.display()));
     }
@@ -68,6 +101,13 @@ fn run_turn(rest: &[String]) -> ExitCode {
     if let Err(error) = write_atomic(&dir.join("current"), &format!("{id}\n")) {
         return blocked(&format!("cannot open a new request: {error}"));
     }
+    record(
+        &root,
+        &Event {
+            kind: "request".to_string(),
+            ..Event::default()
+        },
+    );
     ExitCode::from(OK)
 }
 
@@ -110,6 +150,14 @@ fn run_declare(rest: &[String]) -> ExitCode {
         }
         (true, None) => String::new(),
         (false, None) => {
+            record(
+                &root,
+                &Event {
+                    kind: "refused".to_string(),
+                    touches: items.clone(),
+                    ..Event::default()
+                },
+            );
             return blocked(&format!(
                 "this request touches {} and no decision was named. Stop and ask the user, then record the answer in docs/decisions/ before editing files",
                 items.join(", ")
@@ -146,6 +194,15 @@ fn run_declare(rest: &[String]) -> ExitCode {
     if let Err(error) = write_atomic(&dir.join("marker"), &body) {
         return blocked(&format!("cannot record the gate result: {error}"));
     }
+    record(
+        &root,
+        &Event {
+            kind: "gate".to_string(),
+            decision: decision_number(&decision),
+            touches: items,
+            ..Event::default()
+        },
+    );
     ExitCode::from(OK)
 }
 
@@ -171,9 +228,10 @@ fn run_check(rest: &[String]) -> ExitCode {
     let marker = match fs::read_to_string(dir.join("marker")) {
         Ok(value) => value,
         Err(_) => {
+            record_block_once(&root, &dir, &turn);
             return blocked(
                 "the authority gate has not run for this request. Check it against the six items, then run: mkit-gate declare --touches <none|items> [--decision <path>]",
-            )
+            );
         }
     };
     match field(&marker, "turn") {
@@ -183,6 +241,189 @@ fn run_check(rest: &[String]) -> ExitCode {
         }
         None => blocked("the gate record is unreadable. Refusing to change files"),
     }
+}
+
+#[derive(Default)]
+struct Event {
+    kind: String,
+    after: Option<String>,
+    decision: Option<String>,
+    round: Option<u64>,
+    touches: Vec<String>,
+    tags: Vec<String>,
+}
+
+fn run_log(rest: &[String]) -> ExitCode {
+    let mut event = Event::default();
+    let mut index = 0;
+    while index < rest.len() {
+        let flag = rest[index].as_str();
+        let value = match rest.get(index + 1) {
+            Some(value) if !value.starts_with("--") => value.clone(),
+            _ => return usage(&format!("{flag} needs a value")),
+        };
+        match flag {
+            "--kind" => event.kind = value,
+            "--after" => event.after = Some(value),
+            "--round" => match value.parse::<u64>() {
+                Ok(parsed) => event.round = Some(parsed),
+                Err(_) => return usage("--round must be a whole number"),
+            },
+            "--tags" => {
+                event.tags = value.split(',').map(|tag| tag.trim().to_string()).collect();
+            }
+            other => return usage(&format!("unknown option '{other}'")),
+        }
+        index += 2;
+    }
+
+    if event.kind.is_empty() {
+        return usage("log needs --kind");
+    }
+    let line = match event_line(&event) {
+        Some(value) => value,
+        None => {
+            return usage(
+                "the ledger accepts only listed kinds, listed commands, whole numbers, and short identifiers matching [a-z0-9-]",
+            )
+        }
+    };
+    let root = match repo_root() {
+        Ok(value) => value,
+        Err(_) => return ExitCode::from(OK),
+    };
+    append_line(&root, &line);
+    ExitCode::from(OK)
+}
+
+fn record(root: &Path, event: &Event) {
+    if let Some(line) = event_line(event) {
+        append_line(root, &line);
+    }
+}
+
+fn record_block_once(root: &Path, dir: &Path, turn: &str) {
+    let sentinel = dir.join("logged-block");
+    if let Ok(previous) = fs::read_to_string(&sentinel) {
+        if previous.trim() == turn {
+            return;
+        }
+    }
+    let _ = write_atomic(&sentinel, &format!("{turn}\n"));
+    record(
+        root,
+        &Event {
+            kind: "blocked".to_string(),
+            ..Event::default()
+        },
+    );
+}
+
+fn append_line(root: &Path, line: &str) {
+    let path = root.join(".mkit").join("ledger.jsonl");
+    let Some(parent) = path.parent() else {
+        return;
+    };
+    if fs::create_dir_all(parent).is_err() {
+        return;
+    }
+    if let Ok(mut file) = fs::OpenOptions::new().create(true).append(true).open(&path) {
+        let _ = file.write_all(line.as_bytes());
+    }
+}
+
+fn event_line(event: &Event) -> Option<String> {
+    if !EVENT_KINDS.contains(&event.kind.as_str()) {
+        return None;
+    }
+    let mut line = format!(
+        "{{\"ts\":{},\"mkit\":\"{}\",\"agent\":\"{}\",\"kind\":\"{}\"",
+        epoch_seconds(),
+        env!("CARGO_PKG_VERSION"),
+        agent_name(),
+        event.kind
+    );
+    if let Some(after) = &event.after {
+        if !COMMANDS.contains(&after.as_str()) {
+            return None;
+        }
+        line.push_str(&format!(",\"after\":\"{after}\""));
+    }
+    if let Some(decision) = &event.decision {
+        if decision.is_empty()
+            || decision.len() > 8
+            || !decision.bytes().all(|b| b.is_ascii_digit())
+        {
+            return None;
+        }
+        line.push_str(&format!(",\"decision\":\"{decision}\""));
+    }
+    if let Some(round) = event.round {
+        line.push_str(&format!(",\"round\":{round}"));
+    }
+    if !event.touches.is_empty() {
+        if event
+            .touches
+            .iter()
+            .any(|item| !GATE_ITEMS.contains(&item.as_str()))
+        {
+            return None;
+        }
+        line.push_str(&format!(",\"touches\":[{}]", quoted(&event.touches)));
+    }
+    if !event.tags.is_empty() {
+        if event.tags.len() > MAX_TAGS || !event.tags.iter().all(|tag| is_slug(tag)) {
+            return None;
+        }
+        line.push_str(&format!(",\"tags\":[{}]", quoted(&event.tags)));
+    }
+    line.push_str("}\n");
+    if line.len() > MAX_LINE {
+        return None;
+    }
+    Some(line)
+}
+
+fn quoted(values: &[String]) -> String {
+    values
+        .iter()
+        .map(|value| format!("\"{value}\""))
+        .collect::<Vec<String>>()
+        .join(",")
+}
+
+fn is_slug(value: &str) -> bool {
+    !value.is_empty()
+        && value.len() <= MAX_SLUG
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'-')
+}
+
+fn agent_name() -> String {
+    let raw = env::var("MKIT_AGENT").unwrap_or_default();
+    if AGENTS.contains(&raw.as_str()) {
+        raw
+    } else {
+        "unknown".to_string()
+    }
+}
+
+fn decision_number(path: &str) -> Option<String> {
+    let name = Path::new(path).file_name()?.to_str()?;
+    let digits: String = name.chars().take_while(|c| c.is_ascii_digit()).collect();
+    if digits.is_empty() {
+        None
+    } else {
+        Some(digits)
+    }
+}
+
+fn epoch_seconds() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|value| value.as_secs())
+        .unwrap_or(0)
 }
 
 fn writes_a_decision(root: &Path) -> bool {
@@ -285,10 +526,6 @@ fn check_relative_path(value: &str) -> Result<(), String> {
 fn field<'a>(body: &'a str, key: &str) -> Option<&'a str> {
     body.lines()
         .find_map(|line| line.strip_prefix(key)?.strip_prefix('='))
-}
-
-fn gate_dir() -> Result<PathBuf, String> {
-    Ok(repo_root()?.join(".mkit").join("gate"))
 }
 
 fn repo_root() -> Result<PathBuf, String> {

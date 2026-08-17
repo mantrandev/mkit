@@ -143,6 +143,8 @@ say "mkit: verified and installed the gate into .mkit/bin"
 mkdir -p "$TARGET/.mkit/hooks"
 cp "$SRC/hooks/claude-code.json" "$TARGET/.mkit/hooks/claude-code.json"
 
+printf 'bin/\ngate/\n' > "$TARGET/.mkit/.gitignore"
+
 say ""
 say "Done. Talk to your agent in plain language:"
 say ""
